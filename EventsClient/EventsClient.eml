@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component jdk="1.8" jdk_type="JavaSDK">
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="boxable-1.5-RC.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/boxable-1.5-RC.jar!/"/>
+	</lib>
+	<lib name="commons-codec-1.11.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/commons-codec-1.11.jar!/"/>
+	</lib>
+	<lib name="commons-csv-1.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/commons-csv-1.4.jar!/"/>
+	</lib>
+	<lib name="commons-lang3-3.9.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/commons-lang3-3.9.jar!/"/>
+	</lib>
+	<lib name="commons-logging-1.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/commons-logging-1.2.jar!/"/>
+	</lib>
+	<lib name="derby.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/derby.jar!/"/>
+	</lib>
+	<lib name="derbyclient.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/derbyclient.jar!/"/>
+	</lib>
+	<lib name="fontawesomefx-commons-8.15.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/fontawesomefx-commons-8.15.jar!/"/>
+	</lib>
+	<lib name="fontawesomefx-fontawesome-4.7.0-5.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/fontawesomefx-fontawesome-4.7.0-5.jar!/"/>
+	</lib>
+	<lib name="fontbox-2.0.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/fontbox-2.0.4.jar!/"/>
+	</lib>
+	<lib name="gson-2.8.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/gson-2.8.1.jar!/"/>
+	</lib>
+	<lib name="guava-21.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/guava-21.0.jar!/"/>
+	</lib>
+	<lib name="javax.mail-1.6.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/javax.mail-1.6.1.jar!/"/>
+	</lib>
+	<lib name="jfoenix-8.0.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/jfoenix-8.0.4.jar!/"/>
+	</lib>
+	<lib name="log4j-api-2.11.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/log4j-api-2.11.0.jar!/"/>
+	</lib>
+	<lib name="log4j-core-2.11.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/log4j-core-2.11.0.jar!/"/>
+	</lib>
+	<lib name="pdfbox-2.0.3.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pdfbox-2.0.3.jar!/"/>
+	</lib>
+	<lib name="slf4j-api-1.7.25.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.25.jar!/"/>
+	</lib>
+	<lib name="slf4j-simple-1.7.25.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/slf4j-simple-1.7.25.jar!/"/>
+	</lib>
+</component>
