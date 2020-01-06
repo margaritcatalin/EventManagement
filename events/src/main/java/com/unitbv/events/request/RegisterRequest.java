@@ -3,7 +3,7 @@ package com.unitbv.events.request;
 public class RegisterRequest {
     String firstName;
     String lastName;
-    String Email;
+    String email;
     String password;
 
     public String getFirstName() {
@@ -23,11 +23,11 @@ public class RegisterRequest {
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
     public String getPassword() {

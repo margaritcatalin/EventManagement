@@ -11,7 +11,9 @@ import java.net.SocketTimeoutException;
 import java.util.Objects;
 
 import com.google.gson.Gson;
+import com.unitbv.events.request.AvailabilityRequest;
 import com.unitbv.events.request.CreateEventRequest;
+import com.unitbv.events.request.EditProfileRequest;
 import com.unitbv.events.request.GetUserRequest;
 import com.unitbv.events.request.LoginRequst;
 import com.unitbv.events.request.RegisterRequest;
@@ -87,9 +89,44 @@ public class ServerUtilities implements Runnable {
 					bufferedOutputWriter.write(gson.toJson(userService.getUserByEmail(getUserRequest.getEmail())));
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
+				} else if ("editProfile".equalsIgnoreCase(inputCommand)) {
+					SimpleResponse response = new SimpleResponse();
+					EditProfileRequest updateUserRequest = gson.fromJson(receivedData, EditProfileRequest.class);
+					if (userService.checkIfAccountExist(updateUserRequest.getEmail())
+							&& !updateUserRequest.getEmail().equalsIgnoreCase(updateUserRequest.getCurrentEmail())) {
+						response.setStatusCode("301");
+						response.setMessage("Email is already used!");
+					} else if (userService.updateUserProfile(updateUserRequest)) {
+						response.setStatusCode("200");
+						response.setMessage("Successful!");
+					} else {
+						response.setStatusCode("500");
+						response.setMessage("Internal Server Errror!");
+					}
+					bufferedOutputWriter.write(gson.toJson(response));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("setUserAvailability".equalsIgnoreCase(inputCommand)) {
+					SimpleResponse response = new SimpleResponse();
+					AvailabilityRequest availabilityRequest = gson.fromJson(receivedData, AvailabilityRequest.class);
+					if (userService.checkIfAccountExist(availabilityRequest.getCurrentEmail())
+							&& userService.updateUserAvailability(availabilityRequest)) {
+						response.setStatusCode("200");
+						response.setMessage("Successful!");
+					} else {
+						response.setStatusCode("500");
+						response.setMessage("Internal Server Errror!");
+					}
+					bufferedOutputWriter.write(gson.toJson(response));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
 				} else if ("getAllEvents".equalsIgnoreCase(inputCommand)) {
-					CreateEventRequest createEventRequest = gson.fromJson(receivedData, CreateEventRequest.class);
 					bufferedOutputWriter.write(gson.toJson(eventService.getAllEvents()));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("getNotificationForCurrentUser".equalsIgnoreCase(inputCommand)) {
+					String currentUserEmail=receivedData;
+					bufferedOutputWriter.write(gson.toJson(userService.getAllNotificationForUser(currentUserEmail)));
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
 				} else if ("createEvent".equalsIgnoreCase(inputCommand)) {

@@ -10,7 +10,7 @@
 		<class>com.unitbv.events.model.User</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:mysql://localhost:3306/proiecttd" />
+				value="jdbc:mysql://localhost:3307/proiecttd" />
 			<property name="javax.persistence.jdbc.driver"
 				value="com.mysql.cj.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.user" value="root" />

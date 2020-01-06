@@ -5,16 +5,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.gson.Gson;
-import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
+import com.mysql.cj.util.StringUtils;
 import com.unitbv.events.dao.RoleDao;
 import com.unitbv.events.dao.UserDao;
 import com.unitbv.events.data.EventData;
+import com.unitbv.events.data.NotificationData;
 import com.unitbv.events.data.RoleData;
 import com.unitbv.events.data.UserData;
 import com.unitbv.events.model.Role;
 import com.unitbv.events.model.User;
+import com.unitbv.events.request.AvailabilityRequest;
+import com.unitbv.events.request.EditProfileRequest;
 import com.unitbv.events.request.RegisterRequest;
+import com.unitbv.events.response.NotificationDataResponse;
 import com.unitbv.events.response.UserDataResponse;
 import com.unitbv.events.service.UserService;
 import com.unitbv.events.util.EntityDAOImplFactory;
@@ -34,14 +37,14 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public boolean createUser(RegisterRequest request) {
-		User user =new User();
+		User user = new User();
 		user.setEmail(request.getEmail());
 		user.setPassword(request.getPassword());
 		user.setFirstName(request.getFirstName());
 		user.setLastName(request.getLastName());
 		user.setIsActive(true);
 		user.setIsAvailable(true);
-		Role role=roleDao.findByRoleName("CUSTOMER");
+		Role role = roleDao.findByRoleName("CUSTOMER");
 		user.setRoles(Arrays.asList(role));
 		return Objects.nonNull(userDao.createOrUpdate(user));
 	}
@@ -70,36 +73,36 @@ public class DefaultUserService implements UserService {
 		return false;
 	}
 
-
 	@Override
 	public UserDataResponse getUserByEmail(String email) {
-		UserDataResponse userDataResponse=new UserDataResponse();
-		User userModel=userDao.findByEmail(email);
-		if(Objects.isNull(userModel)) {
+		UserDataResponse userDataResponse = new UserDataResponse();
+		User userModel = userDao.findByEmail(email);
+		if (Objects.isNull(userModel)) {
 			userDataResponse.setStatusCode("404");
-		}else {
+		} else {
 			userDataResponse.setStatusCode("200");
-			UserData userData=new UserData();
-			
+			UserData userData = new UserData();
+
 			userData.setEmail(userModel.getEmail());
 			userData.setFirstName(userModel.getFirstName());
 			userData.setLastName(userModel.getLastName());
-			List<RoleData> userRoles=new ArrayList();
-			userModel.getRoles().stream().forEach(role->{
-				RoleData roleData=new RoleData();
+			userData.setAvailability(userModel.getIsAvailable());
+			List<RoleData> userRoles = new ArrayList();
+			userModel.getRoles().stream().forEach(role -> {
+				RoleData roleData = new RoleData();
 				roleData.setRoleName(role.getRoleName());
 				userRoles.add(roleData);
 			});
 			userData.setRoles(userRoles);
-			List<EventData> events=new ArrayList();
-			userModel.getEvents().stream().forEach(event->{
-				EventData eventData= new EventData();
+			List<EventData> events = new ArrayList();
+			userModel.getEvents().stream().forEach(event -> {
+				EventData eventData = new EventData();
 				eventData.setDate(event.getDate());
 				eventData.setName(event.getName());
 				eventData.setLocation(event.getLocation());
 				eventData.setDescription(event.getDescription());
 				eventData.setNrSeats(event.getNrSeats());
-				String organizer= event.getUser().getFirstName()+ " "+ event.getUser().getLastName();
+				String organizer = event.getUser().getFirstName() + " " + event.getUser().getLastName();
 				eventData.setOrganizer(organizer);
 				events.add(eventData);
 			});
@@ -107,5 +110,46 @@ public class DefaultUserService implements UserService {
 			userDataResponse.setUserData(userData);
 		}
 		return userDataResponse;
+	}
+
+	@Override
+	public boolean updateUserProfile(EditProfileRequest request) {
+		User userModel = userDao.findByEmail(request.getCurrentEmail());
+		if (!userModel.getEmail().equalsIgnoreCase(request.getEmail())) {
+			userModel.setEmail(request.getEmail());
+		}
+		if (!StringUtils.isEmptyOrWhitespaceOnly(request.getNewPassword())) {
+			userModel.setPassword(request.getNewPassword());
+		}
+		userModel.setFirstName(request.getFirstName());
+		userModel.setLastName(request.getLastName());
+		return Objects.nonNull(userDao.createOrUpdate(userModel));
+	}
+
+	@Override
+	public boolean updateUserAvailability(AvailabilityRequest request) {
+		User userModel = userDao.findByEmail(request.getCurrentEmail());
+		userModel.setIsAvailable(request.getAvailable());
+		return Objects.nonNull(userDao.createOrUpdate(userModel));
+	}
+
+	@Override
+	public NotificationDataResponse getAllNotificationForUser(String currentUserEmail) {
+		NotificationDataResponse notificationDataResponse = new NotificationDataResponse();
+		User userModel = userDao.findByEmail(currentUserEmail);
+		if (Objects.isNull(userModel)) {
+			notificationDataResponse.setStatusCode("404");
+		} else {
+			notificationDataResponse.setStatusCode("200");
+			List<NotificationData> notifications = new ArrayList();
+			userModel.getNotifications().stream().forEach(not -> {
+				NotificationData notificationData = new NotificationData();
+				notificationData.setDescription(not.getDescription());
+				notifications.add(notificationData);
+			});
+			notificationDataResponse.setNotifications(notifications);
+		}
+		return notificationDataResponse;
+
 	}
 }

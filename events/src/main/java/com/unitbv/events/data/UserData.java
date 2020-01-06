@@ -6,6 +6,7 @@ public class UserData {
     String email;
     String firstName;
     String lastName;
+    Boolean availability;
     List<RoleData> roles;
     List<EventData> events;
     List<InvitationData> invitations;
@@ -53,6 +54,13 @@ public class UserData {
 	public void setNotifications(List<NotificationData> notifications) {
 		this.notifications = notifications;
 	}
+	
+    public Boolean getAvailability() {
+		return availability;
+	}
     
+    public void setAvailability(Boolean availability) {
+		this.availability = availability;
+	}
     
 }

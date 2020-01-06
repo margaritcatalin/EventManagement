@@ -1,10 +1,11 @@
 package application.request;
 
-public class RegisterRequest {
+public class EditProfileRequest {
     String firstName;
     String lastName;
     String email;
-    String password;
+    String currentEmail;
+    String newPassword;
 
     public String getFirstName() {
         return firstName;
@@ -30,11 +31,19 @@ public class RegisterRequest {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getNewPassword() {
+        return newPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public String getCurrentEmail() {
+        return currentEmail;
+    }
+
+    public void setCurrentEmail(String currentEmail) {
+        this.currentEmail = currentEmail;
     }
 }
