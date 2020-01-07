@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="313.0" prefWidth="949.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="313.0" prefWidth="949.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.EventController">
     <children>
         <Pane layoutX="29.0" layoutY="22.0" prefHeight="267.0" prefWidth="896.0" style="-fx-background-color: #fff;">
             <children>
@@ -68,7 +68,7 @@
                 </Label>
                 <Label layoutX="774.0" layoutY="41.0" text="AUG" textFill="#3a1c9d" />
                 <Label layoutX="774.0" layoutY="59.0" text="2018" textFill="#aeacac" />
-                <Label layoutX="123.0" layoutY="51.0" text="Ref: 20178" textFill="#b2b0b0">
+                <Label fx:id="lblEventCode" layoutX="123.0" layoutY="51.0" text="Ref: 20178" textFill="#b2b0b0">
                     <font>
                         <Font size="14.0" />
                     </font>
@@ -78,8 +78,8 @@
                   <Font size="13.0" />
                </font>
             </Label>
-            <Button layoutX="786.0" layoutY="11.0" mnemonicParsing="false" text="Edit" />
-            <Button layoutX="831.0" layoutY="11.0" mnemonicParsing="false" text="Delete" />
+            <Button fx:id="btnEditEvent" onMouseClicked="#handleEditEventButtonAction" layoutX="786.0" layoutY="11.0" mnemonicParsing="false" text="Edit" />
+            <Button  fx:id="btnDeleteEvent" onMouseClicked="#handleDeleteEventButtonAction" layoutX="831.0" layoutY="11.0" mnemonicParsing="false" text="Delete" />
             </children>
             <effect>
                 <DropShadow color="#d7d2d2" height="50.0" radius="24.5" width="50.0" />

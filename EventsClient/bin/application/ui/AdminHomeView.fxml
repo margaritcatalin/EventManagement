@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import application.util.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
@@ -7,7 +8,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<?import application.util.AvailableSwitchButton?>
 <AnchorPane id="AnchorPane" nodeOrientation="LEFT_TO_RIGHT" prefHeight="623.0" prefWidth="1271.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.AdminController">
     <children>
         <Pane layoutX="-2.0" prefHeight="145.0" prefWidth="1062.0" styleClass="head-background" stylesheets="@../../resources/style.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -32,7 +32,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
-                <AvailableSwitchButton fx:id="lblSwtichAvailability" layoutX="1041.0" layoutY="17.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="163.0" text="Available"  >
+                <AvailableSwitchButton fx:id="lblSwtichAvailability" layoutX="1041.0" layoutY="17.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="163.0" text="Available">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
@@ -52,7 +52,7 @@
                         <Insets top="60.0" />
                     </VBox.margin>
                 </Label>
-                <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="Events lists" textFill="#5b5858">
+                <Button onMouseClicked="#handleButtonAction" alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="Events lists" textFill="#5b5858">
                     <VBox.margin>
                         <Insets />
                     </VBox.margin>
@@ -70,7 +70,7 @@
                         <Insets left="50.0" />
                     </padding>
                 </Button>
-                <Button fx:id="btnNotificationEvent" onMouseClicked="#handleNotificationEventButtonAction" alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="Notifications" textFill="#5b5858">
+                <Button fx:id="btnNotificationEvent" alignment="BASELINE_LEFT" graphicTextGap="10.0" onMouseClicked="#handleNotificationEventButtonAction" prefHeight="43.0" prefWidth="252.0" text="Notifications" textFill="#5b5858">
                     <VBox.margin>
                         <Insets />
                     </VBox.margin>
@@ -88,7 +88,7 @@
                         <Insets left="50.0" />
                     </padding>
                 </Button>
-                <Button fx:id="btnInvitationEvent" onMouseClicked="#handleInvitationEventButtonAction" alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="Invitations" textFill="#5b5858">
+                <Button fx:id="btnInvitationEvent" alignment="BASELINE_LEFT" graphicTextGap="10.0" onMouseClicked="#handleInvitationEventButtonAction" prefHeight="43.0" prefWidth="252.0" text="Invitations" textFill="#5b5858">
                     <font>
                         <Font size="13.0" />
                     </font>
@@ -129,7 +129,7 @@
                         <Insets left="40.0" />
                     </padding>
                 </Label>
-                <Button  fx:id="btnUsersEvent" onMouseClicked="#handleUsersEventButtonAction" alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="All Users" textFill="#5b5858">
+                <Button fx:id="btnUsersEvent" alignment="BASELINE_LEFT" graphicTextGap="10.0" onMouseClicked="#handleUsersEventButtonAction" prefHeight="43.0" prefWidth="252.0" text="All Users" textFill="#5b5858">
                     <font>
                         <Font size="13.0" />
                     </font>
@@ -144,7 +144,7 @@
                         <Insets left="50.0" />
                     </padding>
                 </Button>
-                <Button  fx:id="btnCustomersEvent" onMouseClicked="#handleCustomersEventButtonAction" alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="Customers" textFill="#5b5858">
+                <Button fx:id="btnCustomersEvent" alignment="BASELINE_LEFT" graphicTextGap="10.0" onMouseClicked="#handleCustomersEventButtonAction" prefHeight="43.0" prefWidth="252.0" text="Customers" textFill="#5b5858">
                     <font>
                         <Font size="13.0" />
                     </font>
@@ -159,7 +159,7 @@
                         <Insets left="50.0" />
                     </padding>
                 </Button>
-                <Button  fx:id="btnOrganizersEvent" onMouseClicked="#handleOrganizersEventButtonAction" alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="Organizators" textFill="#5b5858">
+                <Button fx:id="btnOrganizersEvent" alignment="BASELINE_LEFT" graphicTextGap="10.0" onMouseClicked="#handleOrganizersEventButtonAction" prefHeight="43.0" prefWidth="252.0" text="Organizators" textFill="#5b5858">
                     <font>
                         <Font size="13.0" />
                     </font>
@@ -198,15 +198,12 @@
         </ScrollPane>
         <HBox layoutX="251.0" layoutY="145.0" prefHeight="30.0" prefWidth="810.0" AnchorPane.leftAnchor="251.0" AnchorPane.rightAnchor="1.0">
             <children>
-                <Label fx:id="lbl_currentprojects" onMouseClicked="#handleButtonAction" prefHeight="30.0" prefWidth="207.0" text="Current Events" textFill="#171717">
-                    <font>
-                        <Font name="System Bold" size="13.0" />
-                    </font>
+                <Label fx:id="lblAllEvents" onMouseClicked="#handleButtonAction" prefHeight="30.0" prefWidth="207.0" text="All Events" textFill="#171717">
                     <padding>
                         <Insets left="40.0" />
                     </padding>
                 </Label>
-                <Label fx:id="lbl_pending" onMouseClicked="#handleButtonAction" prefHeight="30.0" prefWidth="207.0" text="Pending Events" textFill="#171717">
+                <Label fx:id="lblNextEvents" onMouseClicked="#handleButtonAction" prefHeight="30.0" prefWidth="207.0" text="Next Events" textFill="#171717">
                     <font>
                         <Font size="13.0" />
                     </font>
@@ -214,7 +211,7 @@
                         <Insets left="40.0" />
                     </padding>
                 </Label>
-                <Label fx:id="lbl_completed" onMouseClicked="#handleButtonAction" prefHeight="30.0" prefWidth="207.0" text="Completed Events" textFill="#171717">
+                <Label fx:id="lblCompletedEvents" onMouseClicked="#handleButtonAction" prefHeight="30.0" prefWidth="207.0" text="Completed Events" textFill="#171717">
                     <font>
                         <Font size="13.0" />
                     </font>

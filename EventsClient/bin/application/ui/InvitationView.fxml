@@ -24,13 +24,14 @@
                         <Font name="Segoe UI" size="12.0" />
                     </font>
                 </Label>
-                <Button fx:id="btnSave" layoutX="49.0" layoutY="175.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="256.0" styleClass="button2" stylesheets="@../../resources/style.css" text="Delete All" />
-                <Button fx:id="btnSave1" layoutX="49.0" layoutY="130.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="256.0" styleClass="button2" stylesheets="@../../resources/style.css" text="Delete Selected" />
+                <Button fx:id="btnSave" layoutX="50.0" layoutY="127.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="256.0" styleClass="button2" stylesheets="@../../resources/style.css" text="Download Invitation" />
                 <ImageView fitHeight="253.0" fitWidth="321.0" layoutX="17.0" layoutY="336.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../../resources/invitation.png" />
                     </image>
                 </ImageView>
+            <Button fx:id="btnSave1" layoutX="49.0" layoutY="168.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="256.0" styleClass="button2" stylesheets="@../../resources/style.css" text="Accept Invitation" />
+            <Button fx:id="btnSave11" layoutX="49.0" layoutY="211.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="256.0" styleClass="button2" stylesheets="@../../resources/style.css" text="See Event Details" />
             </children>
         </Pane>
         <TableView fx:id="tblData" layoutX="362.0" layoutY="71.0" prefHeight="488.0" prefWidth="727.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="362.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="71.0">

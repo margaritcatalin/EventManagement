@@ -109,6 +109,7 @@ public class DefaultUserService implements UserService {
 				eventData.setLocation(event.getLocation());
 				eventData.setDescription(event.getDescription());
 				eventData.setNrSeats(event.getNrSeats());
+				eventData.setEventId(event.getEventId());
 				String organizer = event.getUser().getFirstName() + " " + event.getUser().getLastName();
 				eventData.setOrganizer(organizer);
 				events.add(eventData);
@@ -213,7 +214,8 @@ public class DefaultUserService implements UserService {
 	public CustomerDataResponse getAllCustomers() {
 		CustomerDataResponse customerDataResponse = new CustomerDataResponse();
 		Role role = roleDao.findByRoleName("CUSTOMER");
-		List<User> users = userDao.readAll().stream().filter(customer -> customer.getRoles().contains(role))
+		List<User> users = userDao.readAll().stream()
+				.filter(customer -> customer.getRoles().get(0).getRoleId() == role.getRoleId())
 				.collect(Collectors.toList());
 		if (Objects.isNull(users)) {
 			customerDataResponse.setStatusCode("404");
@@ -238,7 +240,8 @@ public class DefaultUserService implements UserService {
 	public CustomerDataResponse getAllOrganizers() {
 		CustomerDataResponse customerDataResponse = new CustomerDataResponse();
 		Role role = roleDao.findByRoleName("ORGANIZER");
-		List<User> users = userDao.readAll().stream().filter(customer -> customer.getRoles().contains(role))
+		List<User> users = userDao.readAll().stream()
+				.filter(customer -> customer.getRoles().get(0).getRoleId() == role.getRoleId())
 				.collect(Collectors.toList());
 		if (Objects.isNull(users)) {
 			customerDataResponse.setStatusCode("404");

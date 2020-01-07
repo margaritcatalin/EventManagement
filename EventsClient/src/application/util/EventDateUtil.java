@@ -3,8 +3,7 @@ package application.util;
 import java.util.Date;
 
 public class EventDateUtil {
-    public static String getEventMonth(Date date){
-        String month=String.valueOf(date.getMonth());
+    public static String getEventMonth(String month){
         if("1".equalsIgnoreCase(month)){
             return "IAN";
         }else if("2".equalsIgnoreCase(month)){

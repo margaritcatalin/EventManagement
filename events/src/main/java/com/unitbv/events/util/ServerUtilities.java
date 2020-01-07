@@ -13,6 +13,7 @@ import java.util.Objects;
 import com.google.gson.Gson;
 import com.unitbv.events.request.AvailabilityRequest;
 import com.unitbv.events.request.CreateEventRequest;
+import com.unitbv.events.request.EditEventRequest;
 import com.unitbv.events.request.EditProfileRequest;
 import com.unitbv.events.request.GetUserRequest;
 import com.unitbv.events.request.LoginRequst;
@@ -121,7 +122,18 @@ public class ServerUtilities implements Runnable {
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
 				} else if ("getAllEvents".equalsIgnoreCase(inputCommand)) {
-					bufferedOutputWriter.write(gson.toJson(eventService.getAllEvents()));
+					String currentUserEmail=receivedData;
+					bufferedOutputWriter.write(gson.toJson(eventService.getAllEvents(currentUserEmail)));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("getCompletedEventsForCurrentUser".equalsIgnoreCase(inputCommand)) {
+					String currentUserEmail=receivedData;
+					bufferedOutputWriter.write(gson.toJson(eventService.getCompletedEventsForCurrentUser(currentUserEmail)));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("getNextEventsForCurrentUser".equalsIgnoreCase(inputCommand)) {
+					String currentUserEmail=receivedData;
+					bufferedOutputWriter.write(gson.toJson(eventService.getNextEventsForCurrentUser(currentUserEmail)));
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
 				} else if ("getNotificationForCurrentUser".equalsIgnoreCase(inputCommand)) {
@@ -160,6 +172,29 @@ public class ServerUtilities implements Runnable {
 						response.setMessage("Internal Server Errror!");
 					}
 					bufferedOutputWriter.write(gson.toJson(response));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("deleteEvent".equalsIgnoreCase(inputCommand)) {
+					String eventCode=receivedData;
+					bufferedOutputWriter.write(gson.toJson(eventService.deleteEvent(eventCode)));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("editEvent".equalsIgnoreCase(inputCommand)) {
+					SimpleResponse response = new SimpleResponse();
+					EditEventRequest editEventRequest = gson.fromJson(receivedData, EditEventRequest.class);
+					if (eventService.editEvent(editEventRequest)) {
+						response.setStatusCode("200");
+						response.setMessage("Successful!");
+					} else {
+						response.setStatusCode("500");
+						response.setMessage("Internal Server Errror!");
+					}
+					bufferedOutputWriter.write(gson.toJson(response));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("getEventById".equalsIgnoreCase(inputCommand)) {
+					String eventId=receivedData;
+					bufferedOutputWriter.write(gson.toJson(eventService.getEventById(eventId)));
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
 				} else {

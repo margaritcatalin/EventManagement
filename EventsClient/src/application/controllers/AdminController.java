@@ -23,13 +23,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class AdminController implements Initializable {
@@ -71,8 +72,49 @@ public class AdminController implements Initializable {
     private Button btnCustomersEvent;
 
     @FXML
-    public void handleButtonAction(MouseEvent event) {
+    private Label lblAllEvents;
 
+    @FXML
+    private Label lblNextEvents;
+
+    @FXML
+    private Label lblCompletedEvents;
+
+    @FXML
+    public void handleButtonAction(MouseEvent event) {
+        Gson gson = new Gson();
+        try {
+            if (event.getSource() == lblNextEvents) {
+                String serverEventResponse = ClientUtil.communicateWithServer("getNextEventsForCurrentUser", SessionInfo.getCurrentUserEmail());
+                EventDataResponse eventsResponse = gson.fromJson(serverEventResponse, EventDataResponse.class);
+                if ("200".equalsIgnoreCase(eventsResponse.getStatusCode())) {
+                    refreshNodes(eventsResponse.getEvents());
+                }
+                lblNextEvents.setFont(Font.font(null, FontWeight.BOLD, 13.0));
+                lblCompletedEvents.setFont(Font.font(13.0));
+                lblAllEvents.setFont(Font.font(13.0));
+            } else if (event.getSource() == lblCompletedEvents) {
+                String serverEventResponse = ClientUtil.communicateWithServer("getCompletedEventsForCurrentUser", SessionInfo.getCurrentUserEmail());
+                EventDataResponse eventsResponse = gson.fromJson(serverEventResponse, EventDataResponse.class);
+                if ("200".equalsIgnoreCase(eventsResponse.getStatusCode())) {
+                    refreshNodes(eventsResponse.getEvents());
+                }
+                lblNextEvents.setFont(Font.font(13.0));
+                lblCompletedEvents.setFont(Font.font(null, FontWeight.BOLD, 13.0));
+                lblAllEvents.setFont(Font.font(13.0));
+            } else {
+                String serverEventResponse = ClientUtil.communicateWithServer("getAllEvents", SessionInfo.getCurrentUserEmail());
+                EventDataResponse eventsResponse = gson.fromJson(serverEventResponse, EventDataResponse.class);
+                if ("200".equalsIgnoreCase(eventsResponse.getStatusCode())) {
+                    refreshNodes(eventsResponse.getEvents());
+                }
+                lblNextEvents.setFont(Font.font(13.0));
+                lblCompletedEvents.setFont(Font.font(13.0));
+                lblAllEvents.setFont(Font.font(null, FontWeight.BOLD, 13.0));
+            }
+        } catch (Exception e) {
+            // TO DO
+        }
     }
 
     @FXML
@@ -227,18 +269,11 @@ public class AdminController implements Initializable {
                     lblSwtichAvailability.setStyle("-fx-background-color: grey;-fx-text-fill:black;");
                     lblSwtichAvailability.setContentDisplay(ContentDisplay.LEFT);
                 }
-                if ("ADMIN".equalsIgnoreCase(userData.getRoles().get(0).getRoleName())) {
-                    try {
-                        String serverEventResponse = ClientUtil.communicateWithServer("getAllEvents", "");
-                        EventDataResponse eventsResponse = gson.fromJson(serverEventResponse, EventDataResponse.class);
-                        if ("200".equalsIgnoreCase(response.getStatusCode())) {
-                            refreshNodes(eventsResponse.getEvents());
-                        }
-                    } catch (Exception e) {
-                        // TO DO
-                    }
-                } else {
-                    refreshNodes(userData.getEvents());
+                String serverEventResponse = ClientUtil.communicateWithServer("getAllEvents", SessionInfo.getCurrentUserEmail());
+                EventDataResponse eventsResponse = gson.fromJson(serverEventResponse, EventDataResponse.class);
+                if ("200".equalsIgnoreCase(eventsResponse.getStatusCode())) {
+                    refreshNodes(eventsResponse.getEvents());
+                    lblAllEvents.setFont(Font.font(null, FontWeight.BOLD, 13.0));
                 }
             }
         } catch (Exception e) {
@@ -262,14 +297,16 @@ public class AdminController implements Initializable {
                 ((Label) ((Pane) ((AnchorPane) nodes[i]).getChildren().get(0)).getChildren().get(15))
                         .setText(eventDataList.get(i).getLocation());
                 ((Label) ((Pane) ((AnchorPane) nodes[i]).getChildren().get(0)).getChildren().get(14))
-                        .setText("Ref: " + ThreadLocalRandom.current().nextInt());
+                        .setText("Ref: " + eventDataList.get(i).getEventId());
                 Date eventDate = eventDataList.get(i).getDate();
+                Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+                cal.setTime(eventDate);
                 ((Label) ((Pane) ((AnchorPane) nodes[i]).getChildren().get(0)).getChildren().get(11))
-                        .setText(String.valueOf(eventDate.getDay()));
+                        .setText(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
                 ((Label) ((Pane) ((AnchorPane) nodes[i]).getChildren().get(0)).getChildren().get(12))
-                        .setText(EventDateUtil.getEventMonth(eventDate));
+                        .setText(EventDateUtil.getEventMonth(String.valueOf(cal.get(Calendar.MONTH))));
                 ((Label) ((Pane) ((AnchorPane) nodes[i]).getChildren().get(0)).getChildren().get(13))
-                        .setText(String.valueOf(eventDate.getYear()));
+                        .setText(String.valueOf(cal.get(Calendar.YEAR)));
                 ((Label) ((Pane) ((Pane) ((AnchorPane) nodes[i]).getChildren().get(0)).getChildren().get(8))
                         .getChildren().get(0)).setText(eventDataList.get(i).getDescription());
 

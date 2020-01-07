@@ -1,10 +1,8 @@
 package application.controllers;
 
 import application.data.UserData;
-import application.request.CreateEventRequest;
 import application.request.EditProfileRequest;
 import application.request.GetUserRequst;
-import application.request.RegisterRequest;
 import application.response.SimpleResponse;
 import application.response.UserDataResponse;
 import application.util.ClientUtil;
@@ -25,10 +23,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 public class EditProfileController implements Initializable {

@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class EventData {
 
+	private int eventId;
     private String name;
     private String location;
     private String description;
@@ -58,4 +59,12 @@ public class EventData {
     public void setOrganizer(String organizer) {
         this.organizer = organizer;
     }
+    
+    public int getEventId() {
+		return eventId;
+	}
+    
+    public void setEventId(int eventId) {
+		this.eventId = eventId;
+	}
 }

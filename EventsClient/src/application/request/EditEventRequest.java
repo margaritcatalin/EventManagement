@@ -1,14 +1,13 @@
-package application.data;
+package application.request;
 
 import java.util.Date;
 
-public class EventData {
+public class EditEventRequest {
 
-    private int eventId;
     private String name;
     private String location;
     private String description;
-    private String organizer;
+    private String eventId;
     private Integer nrSeats;
     private Date date;
 
@@ -36,6 +35,14 @@ public class EventData {
         this.description = description;
     }
 
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
     public Integer getNrSeats() {
         return nrSeats;
     }
@@ -51,20 +58,5 @@ public class EventData {
     public void setDate(Date date) {
         this.date = date;
     }
-
-    public String getOrganizer() {
-        return organizer;
-    }
-
-    public void setOrganizer(String organizer) {
-        this.organizer = organizer;
-    }
-
-    public int getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(int eventId) {
-        this.eventId = eventId;
-    }
 }
+
