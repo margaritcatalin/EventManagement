@@ -122,7 +122,7 @@ public class DefaultUserDao implements UserDao {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
 
-			return em.createQuery("from User", User.class).getResultList();
+			return em.createQuery("FROM User u", User.class).getResultList();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null;

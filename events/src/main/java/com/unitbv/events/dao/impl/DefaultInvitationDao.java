@@ -102,7 +102,7 @@ public class DefaultInvitationDao implements InvitationDao {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
 
-			return em.createQuery("from Invitation", Invitation.class).getResultList();
+			return em.createQuery("from Invitation i", Invitation.class).getResultList();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null;

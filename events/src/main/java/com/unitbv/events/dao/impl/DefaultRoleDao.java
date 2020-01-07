@@ -117,7 +117,7 @@ public class DefaultRoleDao implements RoleDao {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
 
-			return em.createQuery("from Role", Role.class).getResultList();
+			return em.createQuery("from Role r", Role.class).getResultList();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null;

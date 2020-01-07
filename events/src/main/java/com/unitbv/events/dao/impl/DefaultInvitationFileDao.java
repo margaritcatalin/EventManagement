@@ -102,7 +102,7 @@ public class DefaultInvitationFileDao implements InvitationFileDao {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
 
-			return em.createQuery("from InvitationFile", InvitationFile.class).getResultList();
+			return em.createQuery("from InvitationFile i", InvitationFile.class).getResultList();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null;

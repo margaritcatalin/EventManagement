@@ -88,7 +88,7 @@
                         <Insets left="50.0" />
                     </padding>
                 </Button>
-                <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="Invitations" textFill="#5b5858">
+                <Button fx:id="btnInvitationEvent" onMouseClicked="#handleInvitationEventButtonAction" alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="Invitations" textFill="#5b5858">
                     <font>
                         <Font size="13.0" />
                     </font>
@@ -129,7 +129,7 @@
                         <Insets left="40.0" />
                     </padding>
                 </Label>
-                <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="All Users" textFill="#5b5858">
+                <Button  fx:id="btnUsersEvent" onMouseClicked="#handleUsersEventButtonAction" alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="All Users" textFill="#5b5858">
                     <font>
                         <Font size="13.0" />
                     </font>
@@ -144,7 +144,7 @@
                         <Insets left="50.0" />
                     </padding>
                 </Button>
-                <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="Customers" textFill="#5b5858">
+                <Button  fx:id="btnCustomersEvent" onMouseClicked="#handleCustomersEventButtonAction" alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="Customers" textFill="#5b5858">
                     <font>
                         <Font size="13.0" />
                     </font>
@@ -159,7 +159,7 @@
                         <Insets left="50.0" />
                     </padding>
                 </Button>
-                <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="Organizators" textFill="#5b5858">
+                <Button  fx:id="btnOrganizersEvent" onMouseClicked="#handleOrganizersEventButtonAction" alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0" text="Organizators" textFill="#5b5858">
                     <font>
                         <Font size="13.0" />
                     </font>

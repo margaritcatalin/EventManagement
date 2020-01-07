@@ -28,7 +28,8 @@ public class NotificationController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        fetColumnList();
+        fetRowList();
     }
 
     //only fetch columns
@@ -59,14 +60,15 @@ public class NotificationController implements Initializable {
             NotificationDataResponse notificationDataResponse = gson.fromJson(serverEventResponse, NotificationDataResponse.class);
             if ("200".equalsIgnoreCase(notificationDataResponse.getStatusCode())) {
                 List<NotificationData> notificationDataList = notificationDataResponse.getNotifications();
-                ObservableList row = FXCollections.observableArrayList();
-                notificationDataList.forEach(not -> row.add(not.getDescription()));
-                notificationData.add(row);
+                notificationDataList.forEach(not -> {
+                    ObservableList row = FXCollections.observableArrayList();
+                    row.add(not.getDescription());
+                    notificationData.add(row);
+                });
                 tblData.setItems(notificationData);
             }
         } catch (Exception ex) {
             //TO DO
         }
     }
-}
 }

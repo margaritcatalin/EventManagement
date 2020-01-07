@@ -129,6 +129,26 @@ public class ServerUtilities implements Runnable {
 					bufferedOutputWriter.write(gson.toJson(userService.getAllNotificationForUser(currentUserEmail)));
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
+				} else if ("getInvitationsForCurrentUser".equalsIgnoreCase(inputCommand)) {
+					String currentUserEmail=receivedData;
+					bufferedOutputWriter.write(gson.toJson(userService.getAllInvitationForUser(currentUserEmail)));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("getAllUsers".equalsIgnoreCase(inputCommand)) {
+					String currentUserEmail=receivedData;
+					bufferedOutputWriter.write(gson.toJson(userService.getAllUsers()));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("getAllCustomers".equalsIgnoreCase(inputCommand)) {
+					String currentUserEmail=receivedData;
+					bufferedOutputWriter.write(gson.toJson(userService.getAllCustomers()));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("getAllOrganizers".equalsIgnoreCase(inputCommand)) {
+					String currentUserEmail=receivedData;
+					bufferedOutputWriter.write(gson.toJson(userService.getAllOrganizers()));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
 				} else if ("createEvent".equalsIgnoreCase(inputCommand)) {
 					SimpleResponse response = new SimpleResponse();
 					CreateEventRequest createEventRequest = gson.fromJson(receivedData, CreateEventRequest.class);

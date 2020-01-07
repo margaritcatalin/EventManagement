@@ -59,6 +59,18 @@ public class AdminController implements Initializable {
     private Button btnNotificationEvent;
 
     @FXML
+    private Button btnInvitationEvent;
+
+    @FXML
+    private Button btnOrganizersEvent;
+
+    @FXML
+    private Button btnUsersEvent;
+
+    @FXML
+    private Button btnCustomersEvent;
+
+    @FXML
     public void handleButtonAction(MouseEvent event) {
 
     }
@@ -68,12 +80,71 @@ public class AdminController implements Initializable {
         if (event.getSource() == btnNotificationEvent) {
             Parent root;
             try {
-                root = FXMLLoader.load(getClass().getResource("../ui/CreateEventView.fxml"));
+                root = FXMLLoader.load(getClass().getResource("../ui/NotificationView.fxml"));
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            catch (IOException e) {
+        }
+    }
+
+    @FXML
+    public void handleInvitationEventButtonAction(MouseEvent event) {
+        if (event.getSource() == btnInvitationEvent) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getResource("../ui/InvitationView.fxml"));
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    public void handleOrganizersEventButtonAction(MouseEvent event) {
+        if (event.getSource() == btnOrganizersEvent) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getResource("../ui/OrganizersListView.fxml"));
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    public void handleUsersEventButtonAction(MouseEvent event) {
+        if (event.getSource() == btnUsersEvent) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getResource("../ui/UsersListView.fxml"));
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    public void handleCustomersEventButtonAction(MouseEvent event) {
+        if (event.getSource() == btnCustomersEvent) {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getResource("../ui/CustomersListView.fxml"));
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -146,12 +217,12 @@ public class AdminController implements Initializable {
                 lblUserName.setText(userData.getFirstName() + " " + userData.getLastName());
                 lblUserRole.setText(userData.getRoles().get(0).getRoleName());
                 if (userData.getAvailability()) {
-					lblSwtichAvailability.switchOnProperty().set(true);
+                    lblSwtichAvailability.switchOnProperty().set(true);
                     lblSwtichAvailability.setText("Available");
                     lblSwtichAvailability.setStyle("-fx-background-color: green;-fx-text-fill:white;");
                     lblSwtichAvailability.setContentDisplay(ContentDisplay.RIGHT);
                 } else {
-					lblSwtichAvailability.switchOnProperty().set(false);
+                    lblSwtichAvailability.switchOnProperty().set(false);
                     lblSwtichAvailability.setText("Not Available");
                     lblSwtichAvailability.setStyle("-fx-background-color: grey;-fx-text-fill:black;");
                     lblSwtichAvailability.setContentDisplay(ContentDisplay.LEFT);

@@ -102,7 +102,7 @@ public class DefaultNotificationDao implements NotificationDao {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
 
-			return em.createQuery("from Notification", Notification.class).getResultList();
+			return em.createQuery("from Notification n", Notification.class).getResultList();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null;

@@ -2,13 +2,18 @@ package com.unitbv.events.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.mysql.cj.util.StringUtils;
 import com.unitbv.events.dao.RoleDao;
 import com.unitbv.events.dao.UserDao;
+import com.unitbv.events.data.CustomerData;
 import com.unitbv.events.data.EventData;
+import com.unitbv.events.data.InvitationData;
+import com.unitbv.events.data.InvitationFileData;
 import com.unitbv.events.data.NotificationData;
 import com.unitbv.events.data.RoleData;
 import com.unitbv.events.data.UserData;
@@ -17,6 +22,8 @@ import com.unitbv.events.model.User;
 import com.unitbv.events.request.AvailabilityRequest;
 import com.unitbv.events.request.EditProfileRequest;
 import com.unitbv.events.request.RegisterRequest;
+import com.unitbv.events.response.CustomerDataResponse;
+import com.unitbv.events.response.InvitationDataResponse;
 import com.unitbv.events.response.NotificationDataResponse;
 import com.unitbv.events.response.UserDataResponse;
 import com.unitbv.events.service.UserService;
@@ -151,5 +158,104 @@ public class DefaultUserService implements UserService {
 		}
 		return notificationDataResponse;
 
+	}
+
+	@Override
+	public InvitationDataResponse getAllInvitationForUser(String currentUserEmail) {
+		InvitationDataResponse invitationDataResponse = new InvitationDataResponse();
+		User userModel = userDao.findByEmail(currentUserEmail);
+		if (Objects.isNull(userModel)) {
+			invitationDataResponse.setStatusCode("404");
+		} else {
+			invitationDataResponse.setStatusCode("200");
+			List<InvitationData> invitations = new ArrayList();
+			userModel.getInvitations().stream().forEach(inv -> {
+				InvitationData invitationData = new InvitationData();
+				invitationData.setCreationDate(inv.getCreationDate());
+				invitationData.setDescription(inv.getDescription());
+				invitationData.setEventDate(inv.getEvent().getDate());
+				invitationData.setEventName(inv.getEvent().getName());
+				InvitationFileData invitationFile = new InvitationFileData();
+				invitationFile.setExtension(inv.getInvitationfile().getExtension());
+				invitationFile.setFileData(inv.getInvitationfile().getFileData());
+				invitationData.setInvitationFile(invitationFile);
+				invitations.add(invitationData);
+			});
+			invitationDataResponse.setInvitations(invitations);
+		}
+		return invitationDataResponse;
+	}
+
+	@Override
+	public CustomerDataResponse getAllUsers() {
+		CustomerDataResponse customerDataResponse = new CustomerDataResponse();
+		List<User> users = userDao.readAll();
+		if (Objects.isNull(users)) {
+			customerDataResponse.setStatusCode("404");
+		} else {
+			customerDataResponse.setStatusCode("200");
+			List<CustomerData> customers = new ArrayList();
+			users.stream().forEach(usr -> {
+				CustomerData customerData = new CustomerData();
+				customerData.setFirstName(usr.getFirstName());
+				customerData.setLastName(usr.getLastName());
+				customerData.setEmail(usr.getEmail());
+				customerData.setUserStatus(usr.getIsActive() ? "Yes" : "No");
+				customerData.setAvailabilityStatus(usr.getIsAvailable() ? "Yes" : "No");
+				customers.add(customerData);
+			});
+			customerDataResponse.setCustomers(customers);
+		}
+		return customerDataResponse;
+	}
+
+	@Override
+	public CustomerDataResponse getAllCustomers() {
+		CustomerDataResponse customerDataResponse = new CustomerDataResponse();
+		Role role = roleDao.findByRoleName("CUSTOMER");
+		List<User> users = userDao.readAll().stream().filter(customer -> customer.getRoles().contains(role))
+				.collect(Collectors.toList());
+		if (Objects.isNull(users)) {
+			customerDataResponse.setStatusCode("404");
+		} else {
+			customerDataResponse.setStatusCode("200");
+			List<CustomerData> customers = new ArrayList();
+			users.stream().forEach(usr -> {
+				CustomerData customerData = new CustomerData();
+				customerData.setFirstName(usr.getFirstName());
+				customerData.setLastName(usr.getLastName());
+				customerData.setEmail(usr.getEmail());
+				customerData.setUserStatus(usr.getIsActive() ? "Yes" : "No");
+				customerData.setAvailabilityStatus(usr.getIsAvailable() ? "Yes" : "No");
+				customers.add(customerData);
+			});
+			customerDataResponse.setCustomers(customers);
+		}
+		return customerDataResponse;
+	}
+
+	@Override
+	public CustomerDataResponse getAllOrganizers() {
+		CustomerDataResponse customerDataResponse = new CustomerDataResponse();
+		Role role = roleDao.findByRoleName("ORGANIZER");
+		List<User> users = userDao.readAll().stream().filter(customer -> customer.getRoles().contains(role))
+				.collect(Collectors.toList());
+		if (Objects.isNull(users)) {
+			customerDataResponse.setStatusCode("404");
+		} else {
+			customerDataResponse.setStatusCode("200");
+			List<CustomerData> customers = new ArrayList();
+			users.stream().forEach(usr -> {
+				CustomerData customerData = new CustomerData();
+				customerData.setFirstName(usr.getFirstName());
+				customerData.setLastName(usr.getLastName());
+				customerData.setEmail(usr.getEmail());
+				customerData.setUserStatus(usr.getIsActive() ? "Yes" : "No");
+				customerData.setAvailabilityStatus(usr.getIsAvailable() ? "Yes" : "No");
+				customers.add(customerData);
+			});
+			customerDataResponse.setCustomers(customers);
+		}
+		return customerDataResponse;
 	}
 }
