@@ -11,6 +11,7 @@ import java.net.SocketTimeoutException;
 import java.util.Objects;
 
 import com.google.gson.Gson;
+import com.unitbv.events.request.AcceptInvitationRequest;
 import com.unitbv.events.request.AvailabilityRequest;
 import com.unitbv.events.request.CreateEventRequest;
 import com.unitbv.events.request.EditEventRequest;
@@ -127,7 +128,12 @@ public class ServerUtilities implements Runnable {
 					bufferedOutputWriter.write(gson.toJson(response));
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
-				} else if ("getAllEvents".equalsIgnoreCase(inputCommand)) {
+				}else if ("acceptInvitation".equalsIgnoreCase(inputCommand)) {
+					AcceptInvitationRequest acceptInvitationRequest = gson.fromJson(receivedData, AcceptInvitationRequest.class);
+					bufferedOutputWriter.write(gson.toJson(eventService.acceptInvitation(acceptInvitationRequest)));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				}  else if ("getAllEvents".equalsIgnoreCase(inputCommand)) {
 					String currentUserEmail=receivedData;
 					bufferedOutputWriter.write(gson.toJson(eventService.getAllEvents(currentUserEmail)));
 					bufferedOutputWriter.newLine();
@@ -206,6 +212,10 @@ public class ServerUtilities implements Runnable {
 				} else if ("getEventById".equalsIgnoreCase(inputCommand)) {
 					String eventId=receivedData;
 					bufferedOutputWriter.write(gson.toJson(eventService.getEventById(eventId)));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("getEventByInvitationId".equalsIgnoreCase(inputCommand)) {
+					bufferedOutputWriter.write(gson.toJson(eventService.getEventByInvitationId(receivedData)));
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
 				} else if ("sendInvitationToUser".equalsIgnoreCase(inputCommand)) {

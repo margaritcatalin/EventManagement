@@ -1,7 +1,6 @@
 package com.unitbv.events.dao.impl;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;

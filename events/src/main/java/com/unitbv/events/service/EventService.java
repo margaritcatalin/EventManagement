@@ -1,5 +1,6 @@
 package com.unitbv.events.service;
 
+import com.unitbv.events.request.AcceptInvitationRequest;
 import com.unitbv.events.request.CreateEventRequest;
 import com.unitbv.events.request.EditEventRequest;
 import com.unitbv.events.request.SendInvitationRequest;
@@ -19,7 +20,13 @@ public interface EventService {
 	boolean editEvent(EditEventRequest request);
 
 	SimpleResponse deleteEvent(String eventCode);
-	
+
 	EventDataResponse getEventById(String eventId);
+
+	EventDataResponse getEventByInvitationId(String eventId);
+
 	boolean sendInvitation(SendInvitationRequest sendInvitationRequest);
+
+	SimpleResponse acceptInvitation(AcceptInvitationRequest request);
+
 }

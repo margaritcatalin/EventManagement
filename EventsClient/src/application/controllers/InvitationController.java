@@ -16,9 +16,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -34,12 +36,64 @@ public class InvitationController implements Initializable {
     TableView tblData;
     @FXML
     private Button btnDownloadInvitation;
+    @FXML
+    private Button btnAcceptInvitation;
+    @FXML
+    private Button btnSeeEventDetails;
     private ObservableList<ObservableList> invitationData;
-
+    @FXML
+    private Label lblStatus;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         fetColumnList();
         fetRowList();
+    }
+
+    @FXML
+    public void handleAcceptInvitationAction(MouseEvent event) {
+        if (event.getSource() == btnAcceptInvitation) {
+            try {
+                Node node = (Node) event.getSource();
+                Stage stage = (Stage) node.getScene().getWindow();
+                stage.setMaximized(false);
+                stage.close();
+                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/AcceptInvitationView.fxml")));
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                // TO DO
+            }
+        }
+    }
+
+    @FXML
+    public void handleSeeEventDetailsAction(MouseEvent event) {
+        if (event.getSource() == btnSeeEventDetails && Objects.nonNull(tblData.getSelectionModel().getSelectedItem())) {
+            SessionInfo.selectedInvitation = "NONE";
+            ((ObservableListWrapper) tblData.getSelectionModel().getSelectedItem()).forEach(obj -> {
+                if (((String) obj).contains("Ref: ")) {
+                    SessionInfo.selectedInvitation = ((String) obj).substring(5);
+                }
+            });
+            try {
+                Node node = (Node) event.getSource();
+                Stage stage = (Stage) node.getScene().getWindow();
+                stage.setMaximized(false);
+                stage.close();
+                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/EventDetailsView.fxml")));
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                // TO DO
+            }
+        } else {
+            setStatusLabel(Color.TOMATO, "You need to select an event!");
+        }
+    }
+
+    private void setStatusLabel(Color color, String text) {
+        lblStatus.setTextFill(color);
+        lblStatus.setText(text);
     }
 
     @FXML

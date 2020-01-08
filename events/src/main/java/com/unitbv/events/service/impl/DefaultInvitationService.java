@@ -29,7 +29,7 @@ public class DefaultInvitationService implements InvitationService {
 			invitationDataResponse.setStatusCode("404");
 		} else {
 			invitationDataResponse.setStatusCode("200");
-			List<InvitationData> invitations = new ArrayList();
+			List<InvitationData> invitations = new ArrayList<>();
 			InvitationData invitationData = new InvitationData();
 			invitationData.setCreationDate(inv.getCreationDate());
 			invitationData.setDescription(inv.getDescription());

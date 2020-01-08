@@ -2,14 +2,17 @@ package com.unitbv.events.service.impl;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import com.unitbv.events.dao.EventDao;
 import com.unitbv.events.dao.InvitationDao;
-import com.unitbv.events.dao.InvitationFileDao;
 import com.unitbv.events.dao.RoleDao;
 import com.unitbv.events.dao.UserDao;
 import com.unitbv.events.data.EventData;
@@ -18,6 +21,7 @@ import com.unitbv.events.model.Invitation;
 import com.unitbv.events.model.InvitationFile;
 import com.unitbv.events.model.Role;
 import com.unitbv.events.model.User;
+import com.unitbv.events.request.AcceptInvitationRequest;
 import com.unitbv.events.request.CreateEventRequest;
 import com.unitbv.events.request.EditEventRequest;
 import com.unitbv.events.request.SendInvitationRequest;
@@ -25,10 +29,6 @@ import com.unitbv.events.response.EventDataResponse;
 import com.unitbv.events.response.SimpleResponse;
 import com.unitbv.events.service.EventService;
 import com.unitbv.events.util.EntityDAOImplFactory;
-import com.google.common.base.Charsets;
-import com.google.common.hash.HashCode;
-import com.google.common.hash.HashFunction;
-import com.google.common.hash.Hashing;
 
 public class DefaultEventService implements EventService {
 	private static final String PERSISTENCE_UNIT_NAME = "events";
@@ -37,14 +37,12 @@ public class DefaultEventService implements EventService {
 	private EventDao eventDao;
 	private RoleDao roleDao;
 	private InvitationDao invitationDao;
-	private InvitationFileDao invitationFileDao;
 
 	public DefaultEventService() {
 		userDao = entityDAOImplFactory.createNewUserDao(PERSISTENCE_UNIT_NAME);
 		eventDao = entityDAOImplFactory.createNewEventDao(PERSISTENCE_UNIT_NAME);
 		roleDao = entityDAOImplFactory.createNewRoleDao(PERSISTENCE_UNIT_NAME);
 		invitationDao = entityDAOImplFactory.createNewInvitationDao(PERSISTENCE_UNIT_NAME);
-		invitationFileDao = entityDAOImplFactory.createNewInvitationFileDao(PERSISTENCE_UNIT_NAME);
 	}
 
 	@Override
@@ -236,6 +234,31 @@ public class DefaultEventService implements EventService {
 	}
 
 	@Override
+	public EventDataResponse getEventByInvitationId(String eventId) {
+		EventDataResponse response = new EventDataResponse();
+		List<EventData> events = new ArrayList<EventData>();
+		Invitation invitation = invitationDao.findById(Integer.valueOf(eventId));
+		Event event = invitation.getEvent();
+		if (Objects.nonNull(event)) {
+			EventData eventData = new EventData();
+			eventData.setDate(event.getDate());
+			eventData.setName(event.getName());
+			eventData.setLocation(event.getLocation());
+			eventData.setDescription(event.getDescription());
+			eventData.setNrSeats(event.getNrSeats());
+			eventData.setEventId(event.getEventId());
+			String organizer = event.getUser().getFirstName() + " " + event.getUser().getLastName();
+			eventData.setOrganizer(organizer);
+			events.add(eventData);
+
+		}
+		response.setEvents(events);
+
+		response.setStatusCode("200");
+		return response;
+	}
+
+	@Override
 	public boolean sendInvitation(SendInvitationRequest sendInvitationRequest) {
 		if ("All".equalsIgnoreCase(sendInvitationRequest.getUserEmail())) {
 			List<User> users = userDao.readAll().stream().filter(user -> user.getIsActive() && user.getIsAvailable())
@@ -262,7 +285,7 @@ public class DefaultEventService implements EventService {
 		User user = userDao.findByEmail(email);
 		invitation.setUser(user);
 		List<Invitation> inv = invitationDao.findByEventAndUser(user, event);
-		if (inv.size()>0) {
+		if (inv.size() > 0) {
 			invitation.setInvitationfile(inv.get(0).getInvitationfile());
 		} else {
 			InvitationFile invitationFile = new InvitationFile();
@@ -279,6 +302,48 @@ public class DefaultEventService implements EventService {
 		HashFunction md5 = Hashing.md5();
 		HashCode hashString = md5.hashString(stringToHash, Charset.defaultCharset());
 		return hashString.toString();
+	}
+
+	@Override
+	public SimpleResponse acceptInvitation(AcceptInvitationRequest request) {
+		SimpleResponse simpleResponse = new SimpleResponse();
+		User userModel = userDao.findByEmail(request.getUserEmail());
+		if (Objects.isNull(userModel)) {
+			simpleResponse.setStatusCode("500");
+			simpleResponse.setMessage("User not found!");
+		} else {
+			Date currentDate = new Date(System.currentTimeMillis());
+			userModel.getInvitations().forEach(inv -> {
+				if (request.getInvitationCode()
+						.equals(Base64.getEncoder().encodeToString(inv.getInvitationfile().getFileData()))) {
+					if (inv.getIsAccepted()) {
+						simpleResponse.setStatusCode("404");
+						simpleResponse.setMessage("You already accepted it.");
+					} else {
+						if (inv.getEvent().getDate().after(currentDate)) {
+							if (inv.getEvent().getNrSeats() > 0) {
+								inv.setIsAccepted(true);
+								simpleResponse.setStatusCode("200");
+								simpleResponse.setMessage("Done!");
+								invitationDao.createOrUpdate(inv);
+								inv.getEvent().setNrSeats(inv.getEvent().getNrSeats() - 1);
+								eventDao.createOrUpdate(inv.getEvent());
+							} else {
+								simpleResponse.setStatusCode("404");
+								simpleResponse.setMessage("There are no more places available.");
+							}
+						} else {
+							simpleResponse.setStatusCode("404");
+							simpleResponse.setMessage("This event is no longer available.");
+						}
+					}
+				} else {
+					simpleResponse.setStatusCode("404");
+					simpleResponse.setMessage("Your event key is not correct.");
+				}
+			});
+		}
+		return simpleResponse;
 	}
 
 }

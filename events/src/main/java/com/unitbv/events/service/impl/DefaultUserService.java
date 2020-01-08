@@ -2,7 +2,6 @@ package com.unitbv.events.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -106,14 +105,14 @@ public class DefaultUserService implements UserService {
 			userData.setFirstName(userModel.getFirstName());
 			userData.setLastName(userModel.getLastName());
 			userData.setAvailability(userModel.getIsAvailable());
-			List<RoleData> userRoles = new ArrayList();
+			List<RoleData> userRoles = new ArrayList<>();
 			userModel.getRoles().stream().forEach(role -> {
 				RoleData roleData = new RoleData();
 				roleData.setRoleName(role.getRoleName());
 				userRoles.add(roleData);
 			});
 			userData.setRoles(userRoles);
-			List<EventData> events = new ArrayList();
+			List<EventData> events = new ArrayList<>();
 			userModel.getEvents().stream().forEach(event -> {
 				EventData eventData = new EventData();
 				eventData.setDate(event.getDate());
@@ -161,7 +160,7 @@ public class DefaultUserService implements UserService {
 			notificationDataResponse.setStatusCode("404");
 		} else {
 			notificationDataResponse.setStatusCode("200");
-			List<NotificationData> notifications = new ArrayList();
+			List<NotificationData> notifications = new ArrayList<>();
 			userModel.getNotifications().stream().forEach(not -> {
 				NotificationData notificationData = new NotificationData();
 				notificationData.setDescription(not.getDescription());
@@ -181,7 +180,7 @@ public class DefaultUserService implements UserService {
 			invitationDataResponse.setStatusCode("404");
 		} else {
 			invitationDataResponse.setStatusCode("200");
-			List<InvitationData> invitations = new ArrayList();
+			List<InvitationData> invitations = new ArrayList<>();
 			userModel.getInvitations().stream().forEach(inv -> {
 				InvitationData invitationData = new InvitationData();
 				invitationData.setCreationDate(inv.getCreationDate());
@@ -213,7 +212,7 @@ public class DefaultUserService implements UserService {
 			customerDataResponse.setStatusCode("404");
 		} else {
 			customerDataResponse.setStatusCode("200");
-			List<CustomerData> customers = new ArrayList();
+			List<CustomerData> customers = new ArrayList<>();
 			users.stream().forEach(usr -> {
 				CustomerData customerData = new CustomerData();
 				customerData.setFirstName(usr.getFirstName());
@@ -239,7 +238,7 @@ public class DefaultUserService implements UserService {
 			customerDataResponse.setStatusCode("404");
 		} else {
 			customerDataResponse.setStatusCode("200");
-			List<CustomerData> customers = new ArrayList();
+			List<CustomerData> customers = new ArrayList<>();
 			users.stream().forEach(usr -> {
 				CustomerData customerData = new CustomerData();
 				customerData.setFirstName(usr.getFirstName());
@@ -265,7 +264,7 @@ public class DefaultUserService implements UserService {
 			customerDataResponse.setStatusCode("404");
 		} else {
 			customerDataResponse.setStatusCode("200");
-			List<CustomerData> customers = new ArrayList();
+			List<CustomerData> customers = new ArrayList<>();
 			users.stream().forEach(usr -> {
 				CustomerData customerData = new CustomerData();
 				customerData.setFirstName(usr.getFirstName());
