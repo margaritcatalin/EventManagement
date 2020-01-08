@@ -1,11 +1,15 @@
 package com.unitbv.events.dao.impl;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import com.unitbv.events.dao.InvitationDao;
+import com.unitbv.events.model.Event;
 import com.unitbv.events.model.Invitation;
+import com.unitbv.events.model.User;
 import com.unitbv.events.util.ConnectionManager;
 
 public class DefaultInvitationDao implements InvitationDao {
@@ -16,10 +20,12 @@ public class DefaultInvitationDao implements InvitationDao {
 		conManager = new ConnectionManager(persistenceUnitName);
 	}
 
+	@Override
 	public void close() {
 		conManager.close();
 	}
 
+	@Override
 	public Invitation createOrUpdate(Invitation entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -43,6 +49,7 @@ public class DefaultInvitationDao implements InvitationDao {
 		}
 	}
 
+	@Override
 	public Invitation findById(int id) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -55,6 +62,7 @@ public class DefaultInvitationDao implements InvitationDao {
 		}
 	}
 
+	@Override
 	public Invitation update(Invitation entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -71,6 +79,24 @@ public class DefaultInvitationDao implements InvitationDao {
 		}
 	}
 
+	@Override
+	public List<Invitation> findByEventAndUser(User user, Event event) {
+		try {
+			em = conManager.getEMFactory().createEntityManager();
+			Query query = em.createQuery("Select i FROM Invitation i WHERE i.user = :user AND i.event = :event",
+					Invitation.class);
+			query.setParameter("user", user);
+			query.setParameter("event", event);
+			return query.getResultList();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		} finally {
+			em.close();
+		}
+	}
+
+	@Override
 	public void delete(Invitation entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -88,6 +114,7 @@ public class DefaultInvitationDao implements InvitationDao {
 		}
 	}
 
+	@Override
 	public void deleteAll() {
 		try {
 			for (Invitation entity : readAll()) {
@@ -98,6 +125,7 @@ public class DefaultInvitationDao implements InvitationDao {
 		}
 	}
 
+	@Override
 	public List<Invitation> readAll() {
 		try {
 			em = conManager.getEMFactory().createEntityManager();

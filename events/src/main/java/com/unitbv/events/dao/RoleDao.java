@@ -5,19 +5,19 @@ import java.util.List;
 import com.unitbv.events.model.Role;
 
 public interface RoleDao extends GenericDAO<Role> {
-	public void close();
+	 void close();
 
-	public Role createOrUpdate(Role entity);
+	 Role createOrUpdate(Role entity);
 
-	public Role findById(int id);
+	 Role findById(int id);
 
-	public Role update(Role entity);
+	 Role update(Role entity);
 
-	public void delete(Role entity);
+	 void delete(Role entity);
 
-	public void deleteAll();
+	 void deleteAll();
 
-	public List<Role> readAll();
+	 List<Role> readAll();
 	
-	public Role findByRoleName(String roleName);
+	 Role findByRoleName(String roleName);
 }

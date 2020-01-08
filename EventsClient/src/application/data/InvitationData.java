@@ -3,11 +3,13 @@ package application.data;
 import java.util.Date;
 
 public class InvitationData {
+    private String reference;
     private Date creationDate;
     private String description;
     private String eventName;
     private Date eventDate;
     private InvitationFileData invitationFile;
+    private String isAccepted;
 
     public Date getCreationDate() {
         return creationDate;
@@ -47,5 +49,21 @@ public class InvitationData {
 
     public void setInvitationFile(InvitationFileData invitationFile) {
         this.invitationFile = invitationFile;
+    }
+
+    public String getIsAccepted() {
+        return isAccepted;
+    }
+
+    public void setIsAccepted(String isAccepted) {
+        this.isAccepted = isAccepted;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 }

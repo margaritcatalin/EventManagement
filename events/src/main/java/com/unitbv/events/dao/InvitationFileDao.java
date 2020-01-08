@@ -5,17 +5,17 @@ import java.util.List;
 import com.unitbv.events.model.InvitationFile;
 
 public interface InvitationFileDao extends GenericDAO<InvitationFile> {
-	public void close();
+	 void close();
 
-	public InvitationFile createOrUpdate(InvitationFile entity);
+	 InvitationFile createOrUpdate(InvitationFile entity);
 
-	public InvitationFile findById(int id);
+	 InvitationFile findById(int id);
 
-	public InvitationFile update(InvitationFile entity);
+	 InvitationFile update(InvitationFile entity);
 
-	public void delete(InvitationFile entity);
+	 void delete(InvitationFile entity);
 
-	public void deleteAll();
+	 void deleteAll();
 
-	public List<InvitationFile> readAll();
+	 List<InvitationFile> readAll();
 }

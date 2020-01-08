@@ -53,9 +53,7 @@ public class EventController implements Initializable {
     @FXML
     public void handleDeleteEventButtonAction(MouseEvent event) {
         if (event.getSource() == btnDeleteEvent) {
-            Gson gson = new Gson();
             String serverResponse = ClientUtil.communicateWithServer("deleteEvent", lblEventCode.getText().substring(5));
-            SimpleResponse response = gson.fromJson(serverResponse, SimpleResponse.class);
         }
     }
 

@@ -5,17 +5,17 @@ import java.util.List;
 import com.unitbv.events.model.Event;
 
 public interface EventDao extends GenericDAO<Event> {
-	public void close();
+	 void close();
 
-	public Event createOrUpdate(Event entity);
+	 Event createOrUpdate(Event entity);
 
-	public Event findById(int id);
+	 Event findById(int id);
 
-	public Event update(Event entity);
+	 Event update(Event entity);
 
-	public void delete(Event entity);
+	 void delete(Event entity);
 
-	public void deleteAll();
+	 void deleteAll();
 
-	public List<Event> readAll();
+	 List<Event> readAll();
 }

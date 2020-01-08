@@ -16,10 +16,12 @@ public class DefaultInvitationFileDao implements InvitationFileDao {
 		conManager = new ConnectionManager(persistenceUnitName);
 	}
 
+	@Override
 	public void close() {
 		conManager.close();
 	}
 
+	@Override
 	public InvitationFile createOrUpdate(InvitationFile entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -43,6 +45,7 @@ public class DefaultInvitationFileDao implements InvitationFileDao {
 		}
 	}
 
+	@Override
 	public InvitationFile findById(int id) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -55,6 +58,7 @@ public class DefaultInvitationFileDao implements InvitationFileDao {
 		}
 	}
 
+	@Override
 	public InvitationFile update(InvitationFile entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -71,6 +75,7 @@ public class DefaultInvitationFileDao implements InvitationFileDao {
 		}
 	}
 
+	@Override
 	public void delete(InvitationFile entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -88,6 +93,7 @@ public class DefaultInvitationFileDao implements InvitationFileDao {
 		}
 	}
 
+	@Override
 	public void deleteAll() {
 		try {
 			for (InvitationFile entity : readAll()) {
@@ -98,6 +104,7 @@ public class DefaultInvitationFileDao implements InvitationFileDao {
 		}
 	}
 
+	@Override
 	public List<InvitationFile> readAll() {
 		try {
 			em = conManager.getEMFactory().createEntityManager();

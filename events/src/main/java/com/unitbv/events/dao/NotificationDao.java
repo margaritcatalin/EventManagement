@@ -5,17 +5,17 @@ import java.util.List;
 import com.unitbv.events.model.Notification;
 
 public interface NotificationDao extends GenericDAO<Notification> {
-	public void close();
+	 void close();
 
-	public Notification createOrUpdate(Notification entity);
+	 Notification createOrUpdate(Notification entity);
 
-	public Notification findById(int id);
+	 Notification findById(int id);
 
-	public Notification update(Notification entity);
+	 Notification update(Notification entity);
 
-	public void delete(Notification entity);
+	 void delete(Notification entity);
 
-	public void deleteAll();
+	 void deleteAll();
 
-	public List<Notification> readAll();
+	 List<Notification> readAll();
 }

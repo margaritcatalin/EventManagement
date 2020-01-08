@@ -16,10 +16,12 @@ public class DefaultNotificationDao implements NotificationDao {
 		conManager = new ConnectionManager(persistenceUnitName);
 	}
 
+	@Override
 	public void close() {
 		conManager.close();
 	}
 
+	@Override
 	public Notification createOrUpdate(Notification entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -43,6 +45,7 @@ public class DefaultNotificationDao implements NotificationDao {
 		}
 	}
 
+	@Override
 	public Notification findById(int id) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -55,6 +58,7 @@ public class DefaultNotificationDao implements NotificationDao {
 		}
 	}
 
+	@Override
 	public Notification update(Notification entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -71,6 +75,7 @@ public class DefaultNotificationDao implements NotificationDao {
 		}
 	}
 
+	@Override
 	public void delete(Notification entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -88,6 +93,7 @@ public class DefaultNotificationDao implements NotificationDao {
 		}
 	}
 
+	@Override
 	public void deleteAll() {
 		try {
 			for (Notification entity : readAll()) {
@@ -98,6 +104,7 @@ public class DefaultNotificationDao implements NotificationDao {
 		}
 	}
 
+	@Override
 	public List<Notification> readAll() {
 		try {
 			em = conManager.getEMFactory().createEntityManager();

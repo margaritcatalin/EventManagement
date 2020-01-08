@@ -16,10 +16,12 @@ public class DefaultEventDao implements EventDao {
 		conManager = new ConnectionManager(persistenceUnitName);
 	}
 
+	@Override
 	public void close() {
 		conManager.close();
 	}
 
+	@Override
 	public Event createOrUpdate(Event entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -43,6 +45,7 @@ public class DefaultEventDao implements EventDao {
 		}
 	}
 
+	@Override
 	public Event findById(int id) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -55,6 +58,7 @@ public class DefaultEventDao implements EventDao {
 		}
 	}
 
+	@Override
 	public Event update(Event entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -71,6 +75,7 @@ public class DefaultEventDao implements EventDao {
 		}
 	}
 
+	@Override
 	public void delete(Event entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -88,6 +93,7 @@ public class DefaultEventDao implements EventDao {
 		}
 	}
 
+	@Override
 	public void deleteAll() {
 		try {
 			for (Event entity : readAll()) {
@@ -98,6 +104,7 @@ public class DefaultEventDao implements EventDao {
 		}
 	}
 
+	@Override
 	public List<Event> readAll() {
 		try {
 			em = conManager.getEMFactory().createEntityManager();

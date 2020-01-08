@@ -18,10 +18,13 @@ import com.unitbv.events.request.EditProfileRequest;
 import com.unitbv.events.request.GetUserRequest;
 import com.unitbv.events.request.LoginRequst;
 import com.unitbv.events.request.RegisterRequest;
+import com.unitbv.events.request.SendInvitationRequest;
 import com.unitbv.events.response.SimpleResponse;
 import com.unitbv.events.service.EventService;
+import com.unitbv.events.service.InvitationService;
 import com.unitbv.events.service.UserService;
 import com.unitbv.events.service.impl.DefaultEventService;
+import com.unitbv.events.service.impl.DefaultInvitationService;
 import com.unitbv.events.service.impl.DefaultUserService;
 
 public class ServerUtilities implements Runnable {
@@ -29,13 +32,13 @@ public class ServerUtilities implements Runnable {
 	private Gson gson;
 	private UserService userService;
 	private EventService eventService;
-
+	private InvitationService invitationService;
 	public ServerUtilities(int port) throws IOException {
 		serverSocket = new ServerSocket(port);
 		gson = new Gson();
 		userService = new DefaultUserService();
 		eventService = new DefaultEventService();
-
+		invitationService=new DefaultInvitationService();
 	}
 
 	public void accept() throws IOException {
@@ -62,6 +65,9 @@ public class ServerUtilities implements Runnable {
 					if (!userService.checkIfCredentialsIsCorrect(request.getEmail(), request.getPassword())) {
 						response.setStatusCode("500");
 						response.setMessage("Email or password incorect!");
+					}else if(!userService.checkUserStatus(request.getEmail())) {
+						response.setStatusCode("500");
+						response.setMessage("This user is deactivated!");
 					} else {
 						response.setStatusCode("200");
 						response.setMessage("Login successful!");
@@ -146,6 +152,11 @@ public class ServerUtilities implements Runnable {
 					bufferedOutputWriter.write(gson.toJson(userService.getAllInvitationForUser(currentUserEmail)));
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
+				} else if ("getInvitationByCode".equalsIgnoreCase(inputCommand)) {
+					String invitationCode=receivedData;
+					bufferedOutputWriter.write(gson.toJson(invitationService.getInvitationByCode(invitationCode)));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
 				} else if ("getAllUsers".equalsIgnoreCase(inputCommand)) {
 					String currentUserEmail=receivedData;
 					bufferedOutputWriter.write(gson.toJson(userService.getAllUsers()));
@@ -195,6 +206,33 @@ public class ServerUtilities implements Runnable {
 				} else if ("getEventById".equalsIgnoreCase(inputCommand)) {
 					String eventId=receivedData;
 					bufferedOutputWriter.write(gson.toJson(eventService.getEventById(eventId)));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("sendInvitationToUser".equalsIgnoreCase(inputCommand)) {
+					SimpleResponse response = new SimpleResponse();
+					SendInvitationRequest sendInvitationRequest = gson.fromJson(receivedData, SendInvitationRequest.class);
+					if (eventService.sendInvitation(sendInvitationRequest)) {
+						response.setStatusCode("200");
+						response.setMessage("Successful!");
+					} else {
+						response.setStatusCode("500");
+						response.setMessage("Internal Server Errror!");
+					}
+					bufferedOutputWriter.write(gson.toJson(response));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+					
+				}else if ("deactivateUser".equalsIgnoreCase(inputCommand)) {
+					SimpleResponse response = new SimpleResponse();
+					if (userService.checkIfAccountExist(receivedData)
+							&& userService.deactivateUser(receivedData)) {
+						response.setStatusCode("200");
+						response.setMessage("Successful!");
+					} else {
+						response.setStatusCode("500");
+						response.setMessage("Internal Server Errror!");
+					}
+					bufferedOutputWriter.write(gson.toJson(response));
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
 				} else {

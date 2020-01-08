@@ -81,6 +81,18 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
+	public boolean checkUserStatus(String userName) {
+		if (Objects.isNull(userName)) {
+			return false;
+		}
+		User user = userDao.findByEmail(userName);
+		if (Objects.nonNull(user)) {
+			return user.getIsActive();
+		}
+		return false;
+	}
+
+	@Override
 	public UserDataResponse getUserByEmail(String email) {
 		UserDataResponse userDataResponse = new UserDataResponse();
 		User userModel = userDao.findByEmail(email);
@@ -176,6 +188,12 @@ public class DefaultUserService implements UserService {
 				invitationData.setDescription(inv.getDescription());
 				invitationData.setEventDate(inv.getEvent().getDate());
 				invitationData.setEventName(inv.getEvent().getName());
+				if (Objects.isNull(inv.getIsAccepted())) {
+					invitationData.setIsAccepted("Wait");
+				} else {
+					invitationData.setIsAccepted(inv.getIsAccepted() ? "Yes" : "No");
+				}
+				invitationData.setReference("Ref: " + inv.getInvitationId());
 				InvitationFileData invitationFile = new InvitationFileData();
 				invitationFile.setExtension(inv.getInvitationfile().getExtension());
 				invitationFile.setFileData(inv.getInvitationfile().getFileData());
@@ -261,4 +279,16 @@ public class DefaultUserService implements UserService {
 		}
 		return customerDataResponse;
 	}
+
+	@Override
+	public boolean deactivateUser(String customerEmail) {
+		User userModel = userDao.findByEmail(customerEmail);
+		if (userModel.getIsActive()) {
+			userModel.setIsActive(false);
+		} else {
+			userModel.setIsActive(true);
+		}
+		return Objects.nonNull(userDao.createOrUpdate(userModel));
+	}
+
 }

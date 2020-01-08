@@ -2,28 +2,94 @@ package application.controllers;
 
 import application.data.CustomerData;
 import application.response.CustomerDataResponse;
+import application.response.SimpleResponse;
 import application.util.ClientUtil;
+import application.util.SessionInfo;
 import com.google.gson.Gson;
+import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
     @FXML
     TableView tblData;
+    @FXML
+    private Button btnDeactivateUser;
+    @FXML
+    private Button btnSendInvitation;
+    @FXML
+    private Label lblStatus;
+    private ObservableList<ObservableList> usersData;
 
-    private ObservableList<ObservableList> invitationData;
+    @FXML
+    public void handleSendInvitationAction(MouseEvent event) {
+        if (event.getSource() == btnSendInvitation && Objects.nonNull(tblData.getSelectionModel().getSelectedItem())) {
+            SessionInfo.selectedUserEmail = "NONE";
+            ((ObservableListWrapper) tblData.getSelectionModel().getSelectedItem()).forEach(obj -> {
+                if (((String) obj).contains("@")) {
+                    SessionInfo.selectedUserEmail = (String) obj;
+                }
+            });
+            try {
+                Node node = (Node) event.getSource();
+                Stage stage = (Stage) node.getScene().getWindow();
+                stage.setMaximized(false);
+                stage.close();
+                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/InviteCustomerEventView.fxml")));
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                // TO DO
+            }
+        } else {
+            setStatusLabel(Color.TOMATO, "You need to select a user!");
+        }
+    }
+
+    @FXML
+    public void handleDeactivateUserAction(MouseEvent event) {
+        if (event.getSource() == btnDeactivateUser && Objects.nonNull(tblData.getSelectionModel().getSelectedItem())) {
+            SessionInfo.selectedUserEmail = "NONE";
+            ((ObservableListWrapper) tblData.getSelectionModel().getSelectedItem()).forEach(obj -> {
+                if (((String) obj).contains("@")) {
+                    SessionInfo.selectedUserEmail = (String) obj;
+                }
+            });
+            String serverResponse = ClientUtil.communicateWithServer("deactivateUser", SessionInfo.selectedUserEmail);
+            Gson gson = new Gson();
+            SimpleResponse response = gson.fromJson(serverResponse, SimpleResponse.class);
+            if ("200".equalsIgnoreCase(response.getStatusCode())) {
+                setStatusLabel(Color.GREEN, "Done");
+                fetRowList();
+            } else {
+                setStatusLabel(Color.TOMATO, "We have an error!");
+            }
+        } else {
+            setStatusLabel(Color.TOMATO, "You need to select a user!");
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -63,7 +129,7 @@ public class CustomerController implements Initializable {
 
     //fetches rows and data from the list
     private void fetRowList() {
-        invitationData = FXCollections.observableArrayList();
+        usersData = FXCollections.observableArrayList();
         try {
             Gson gson = new Gson();
             String serverEventResponse = ClientUtil.communicateWithServer("getAllCustomers", "");
@@ -85,13 +151,18 @@ public class CustomerController implements Initializable {
                             row.add(customer.getAvailabilityStatus());
                         }
                     }
-                    invitationData.add(row);
+                    usersData.add(row);
                 });
-                tblData.setItems(invitationData);
+                tblData.setItems(usersData);
             }
         } catch (Exception ex) {
             //TO DO
         }
+    }
+
+    private void setStatusLabel(Color color, String text) {
+        lblStatus.setTextFill(color);
+        lblStatus.setText(text);
     }
 }
 

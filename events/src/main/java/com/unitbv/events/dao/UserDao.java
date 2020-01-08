@@ -5,20 +5,20 @@ import java.util.List;
 import com.unitbv.events.model.User;
 
 public interface UserDao extends GenericDAO<User> {
-	public void close();
+	 void close();
 
-	public User createOrUpdate(User entity);
+	 User createOrUpdate(User entity);
 
-	public User findById(int id);
+	 User findById(int id);
 
-	public User findByEmail(String email);
+	 User findByEmail(String email);
 	
-	public User update(User entity);
+	 User update(User entity);
 
-	public void delete(User entity);
+	 void delete(User entity);
 
-	public void deleteAll();
+	 void deleteAll();
 
-	public List<User> readAll();
+	 List<User> readAll();
 	
 }

@@ -17,10 +17,12 @@ public class DefaultRoleDao implements RoleDao {
 		conManager = new ConnectionManager(persistenceUnitName);
 	}
 
+	@Override
 	public void close() {
 		conManager.close();
 	}
 
+	@Override
 	public Role findByRoleName(String roleName) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -34,7 +36,8 @@ public class DefaultRoleDao implements RoleDao {
 			em.close();
 		}
 	}
-	
+
+	@Override
 	public Role createOrUpdate(Role entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -58,6 +61,7 @@ public class DefaultRoleDao implements RoleDao {
 		}
 	}
 
+	@Override
 	public Role findById(int id) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -70,6 +74,7 @@ public class DefaultRoleDao implements RoleDao {
 		}
 	}
 
+	@Override
 	public Role update(Role entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -86,6 +91,7 @@ public class DefaultRoleDao implements RoleDao {
 		}
 	}
 
+	@Override
 	public void delete(Role entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -103,6 +109,7 @@ public class DefaultRoleDao implements RoleDao {
 		}
 	}
 
+	@Override
 	public void deleteAll() {
 		try {
 			for (Role entity : readAll()) {
@@ -113,6 +120,7 @@ public class DefaultRoleDao implements RoleDao {
 		}
 	}
 
+	@Override
 	public List<Role> readAll() {
 		try {
 			em = conManager.getEMFactory().createEntityManager();

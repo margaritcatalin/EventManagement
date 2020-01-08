@@ -5,32 +5,72 @@ import application.response.InvitationDataResponse;
 import application.util.ClientUtil;
 import application.util.SessionInfo;
 import com.google.gson.Gson;
+import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class InvitationController implements Initializable {
     @FXML
     TableView tblData;
-
+    @FXML
+    private Button btnDownloadInvitation;
     private ObservableList<ObservableList> invitationData;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         fetColumnList();
         fetRowList();
+    }
+
+    @FXML
+    public void handleDownloadInvitationAction(MouseEvent event) {
+        if (event.getSource() == btnDownloadInvitation && Objects.nonNull(tblData.getSelectionModel().getSelectedItem())) {
+            SessionInfo.selectedInvitation = "NONE";
+            ((ObservableListWrapper) tblData.getSelectionModel().getSelectedItem()).forEach(obj -> {
+                if (((String) obj).contains("Ref: ")) {
+                    SessionInfo.selectedInvitation = ((String) obj).substring(5);
+                }
+            });
+            Node node = (Node) event.getSource();
+            Stage stage = (Stage) node.getScene().getWindow();
+            stage.close();
+            stage.show();
+            FileChooser fileChooser = new FileChooser();
+            //Set extension filter for text files
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+            fileChooser.getExtensionFilters().add(extFilter);
+            //Show save file dialog
+            File file = fileChooser.showSaveDialog(stage);
+            Gson gson = new Gson();
+            String serverEventResponse = ClientUtil.communicateWithServer("getInvitationByCode", SessionInfo.getSelectedInvitation());
+            InvitationDataResponse invitationDataResponse = gson.fromJson(serverEventResponse, InvitationDataResponse.class);
+            if ("200".equalsIgnoreCase(invitationDataResponse.getStatusCode())) {
+                InvitationData invitationData = invitationDataResponse.getInvitations().get(0);
+                if (file != null) {
+                    saveTextToFile(Base64.getEncoder().encodeToString(invitationData.getInvitationFile().getFileData()), file);
+                }
+            }
+        }
     }
 
     //only fetch columns
@@ -55,10 +95,12 @@ public class InvitationController implements Initializable {
 
     private List<String> getColumnNames() {
         List<String> invitationColumns = new ArrayList<>();
+        invitationColumns.add("Reference");
         invitationColumns.add("Creation Date");
         invitationColumns.add("Description");
         invitationColumns.add("Event");
         invitationColumns.add("Event Date");
+        invitationColumns.add("Accepted");
         invitationColumns.add("Attachments");
         return invitationColumns;
     }
@@ -75,14 +117,18 @@ public class InvitationController implements Initializable {
                     ObservableList row = FXCollections.observableArrayList();
                     for (int i = 0; i <= getColumnNames().size(); i++) {
                         if (i == 0) {
-                            row.add(invitation.getCreationDate().toString());
+                            row.add(invitation.getReference());
                         } else if (i == 1) {
-                            row.add(invitation.getDescription());
+                            row.add(invitation.getCreationDate().toString());
                         } else if (i == 2) {
-                            row.add(invitation.getEventName());
+                            row.add(invitation.getDescription());
                         } else if (i == 3) {
-                            row.add(invitation.getEventDate().toString());
+                            row.add(invitation.getEventName());
                         } else if (i == 4) {
+                            row.add(invitation.getEventDate().toString());
+                        } else if (i == 5) {
+                            row.add(invitation.getIsAccepted());
+                        } else if (i == 6) {
                             if (Objects.nonNull(invitation.getInvitationFile())) {
                                 row.add("Yes");
                             } else {
@@ -96,6 +142,16 @@ public class InvitationController implements Initializable {
             }
         } catch (Exception ex) {
             //TO DO
+        }
+    }
+
+    private void saveTextToFile(String content, File file) {
+        try {
+            PrintWriter writer;
+            writer = new PrintWriter(file);
+            writer.println(content);
+            writer.close();
+        } catch (IOException ex) {
         }
     }
 }

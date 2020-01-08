@@ -18,10 +18,12 @@ public class DefaultUserDao implements UserDao {
 		conManager = new ConnectionManager(persistenceUnitName);
 	}
 
+	@Override
 	public void close() {
 		conManager.close();
 	}
 
+	@Override
 	public User createOrUpdate(User entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -45,6 +47,7 @@ public class DefaultUserDao implements UserDao {
 		}
 	}
 
+	@Override
 	public User findById(int id) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -57,13 +60,13 @@ public class DefaultUserDao implements UserDao {
 		}
 	}
 
+	@Override
 	public User findByEmail(String email) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
 			Query query = em.createQuery("Select u FROM User u WHERE u.email = :email");
 			query.setParameter("email", email);
-			if(Objects.nonNull(query.getSingleResult()))
-			{
+			if (Objects.nonNull(query.getSingleResult())) {
 				return (User) query.getSingleResult();
 			}
 			return null;
@@ -75,6 +78,7 @@ public class DefaultUserDao implements UserDao {
 		}
 	}
 
+	@Override
 	public User update(User entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -91,6 +95,7 @@ public class DefaultUserDao implements UserDao {
 		}
 	}
 
+	@Override
 	public void delete(User entity) {
 		try {
 			em = conManager.getEMFactory().createEntityManager();
@@ -108,6 +113,7 @@ public class DefaultUserDao implements UserDao {
 		}
 	}
 
+	@Override
 	public void deleteAll() {
 		try {
 			for (User entity : readAll()) {
@@ -118,6 +124,7 @@ public class DefaultUserDao implements UserDao {
 		}
 	}
 
+	@Override
 	public List<User> readAll() {
 		try {
 			em = conManager.getEMFactory().createEntityManager();

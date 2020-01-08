@@ -2,20 +2,24 @@ package com.unitbv.events.dao;
 
 import java.util.List;
 
+import com.unitbv.events.model.Event;
 import com.unitbv.events.model.Invitation;
+import com.unitbv.events.model.User;
 
 public interface InvitationDao extends GenericDAO<Invitation> {
-	public void close();
+	void close();
 
-	public Invitation createOrUpdate(Invitation entity);
+	Invitation createOrUpdate(Invitation entity);
 
-	public Invitation findById(int id);
+	Invitation findById(int id);
 
-	public Invitation update(Invitation entity);
+	Invitation update(Invitation entity);
 
-	public void delete(Invitation entity);
+	void delete(Invitation entity);
 
-	public void deleteAll();
+	void deleteAll();
 
-	public List<Invitation> readAll();
+	List<Invitation> readAll();
+
+	List<Invitation> findByEventAndUser(User user, Event event);
 }

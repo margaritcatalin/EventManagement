@@ -24,6 +24,8 @@ public class Invitation implements Serializable {
 
 	private String description;
 
+	private Boolean isAccepted;
+	
 	//bi-directional many-to-one association to Event
 	@ManyToOne
 	@JoinColumn(name="eventId")
@@ -88,6 +90,14 @@ public class Invitation implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	public Boolean getIsAccepted() {
+		return isAccepted;
+	}
+	
+	public void setIsAccepted(Boolean isAccepted) {
+		this.isAccepted = isAccepted;
 	}
 
 }

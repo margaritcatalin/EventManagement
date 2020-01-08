@@ -16,6 +16,10 @@ public interface UserService {
 
 	boolean updateUserAvailability(AvailabilityRequest request);
 
+	boolean checkUserStatus(String userName);
+
+	boolean deactivateUser(String customerEmail);
+
 	boolean checkIfAccountExist(String userName);
 
 	boolean checkIfCredentialsIsCorrect(String userName, String password);
