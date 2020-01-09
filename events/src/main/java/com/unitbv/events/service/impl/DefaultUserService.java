@@ -43,6 +43,7 @@ import com.unitbv.events.response.InvitationDataResponse;
 import com.unitbv.events.response.NotificationDataResponse;
 import com.unitbv.events.response.SimpleResponse;
 import com.unitbv.events.response.UserDataResponse;
+import com.unitbv.events.service.InvitationService;
 import com.unitbv.events.service.NotificationService;
 import com.unitbv.events.service.UserService;
 import com.unitbv.events.util.EntityDAOImplFactory;
@@ -54,11 +55,13 @@ public class DefaultUserService implements UserService {
 	private UserDao userDao;
 	private RoleDao roleDao;
 	private NotificationService notificationService;
+	private InvitationService invitationService;
 
 	public DefaultUserService() {
 		userDao = entityDAOImplFactory.createNewUserDao(PERSISTENCE_UNIT_NAME);
 		roleDao = entityDAOImplFactory.createNewRoleDao(PERSISTENCE_UNIT_NAME);
 		notificationService = new DefaultNotificationService();
+		invitationService = new DefaultInvitationService();
 
 	}
 
@@ -209,7 +212,7 @@ public class DefaultUserService implements UserService {
 		} else {
 			invitationDataResponse.setStatusCode("200");
 			List<InvitationData> invitations = new ArrayList<>();
-			userModel.getInvitations().stream().forEach(inv -> {
+			invitationService.readAllByUserEmail(currentUserEmail).stream().forEach(inv -> {
 				InvitationData invitationData = new InvitationData();
 				invitationData.setCreationDate(inv.getCreationDate());
 				invitationData.setDescription(inv.getDescription());
@@ -358,8 +361,8 @@ public class DefaultUserService implements UserService {
 			simpleResponse.setMessage("User not found!");
 		} else if (request.getInvitationCode().equals(
 				createForgotPasswordKey(user.getEmail(), user.getPassword(), String.valueOf(user.getUserId())))) {
-				simpleResponse.setStatusCode("200");
-				simpleResponse.setMessage("Done!");
+			simpleResponse.setStatusCode("200");
+			simpleResponse.setMessage("Done!");
 		}
 		return simpleResponse;
 	}
@@ -377,7 +380,7 @@ public class DefaultUserService implements UserService {
 			notificationService.createNotification(user.getEmail(), "Your profile was updated.");
 			simpleResponse.setStatusCode("200");
 			simpleResponse.setMessage("Done!");
-		}else {
+		} else {
 			simpleResponse.setStatusCode("404");
 			simpleResponse.setMessage("Your password is invalid!");
 		}

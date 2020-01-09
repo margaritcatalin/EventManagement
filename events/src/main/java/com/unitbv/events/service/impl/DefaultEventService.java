@@ -289,29 +289,34 @@ public class DefaultEventService implements EventService {
 	}
 
 	private void createInvitation(String message, String eventCode, String email) {
-		Invitation invitation = new Invitation();
-		invitation.setDescription(message);
 		Event event = eventDao.findById(Integer.valueOf(eventCode));
-		invitation.setEvent(event);
-		invitation.setCreationDate(new Date(System.currentTimeMillis()));
-		invitation.setIsAccepted(false);
 		User user = userDao.findByEmail(email);
-		invitation.setUser(user);
-		List<Invitation> inv = invitationDao.findByEventAndUser(user, event);
-		if (inv.size() > 0) {
-			invitation.setInvitationfile(inv.get(0).getInvitationfile());
-		} else {
-			InvitationFile invitationFile = new InvitationFile();
-			invitationFile.setExtension("txt");
-			invitationFile.setFileData(
-					createInvitationKey(email, event.getName(), eventCode).getBytes(Charset.forName("UTF-8")));
-			invitation.setInvitationfile(invitationFile);
+		if (invitationDao.findByEventAndUser(user, event).size() == 0) {
+			Invitation invitation = new Invitation();
+			invitation.setDescription(message);
+			invitation.setEvent(event);
+			invitation.setCreationDate(new Date(System.currentTimeMillis()));
+			invitation.setIsAccepted(false);
+			invitation.setUser(user);
+			List<Invitation> inv = invitationDao.findByEventAndUser(user, event);
+			if (inv.size() > 0) {
+				invitation.setInvitationfile(inv.get(0).getInvitationfile());
+			} else {
+				InvitationFile invitationFile = new InvitationFile();
+				invitationFile.setExtension("txt");
+				invitationFile.setFileData(
+						createInvitationKey(email, event.getName(), eventCode).getBytes(Charset.forName("UTF-8")));
+				invitation.setInvitationfile(invitationFile);
+			}
+			notificationService.createNotification(event.getUser().getEmail(), "Your invitation for [" + event.getName()
+					+ "(" + event.getEventId() + ")] was sent to " + user.getEmail() + ".");
+			notificationService.createNotification(user.getEmail(), "Your get a invitation for [" + event.getName()
+					+ "(" + event.getEventId() + ")] from " + event.getUser().getEmail() + ".");
+			invitationDao.createOrUpdate(invitation);
+		}else {
+			notificationService.createNotification(user.getEmail(), "Your get a invitation for [" + event.getName()
+			+ "(" + event.getEventId() + ")] from " + event.getUser().getEmail() + ".");
 		}
-		notificationService.createNotification(event.getUser().getEmail(), "Your invitation for [" + event.getName()
-				+ "(" + event.getEventId() + ")] was sent to" + user.getEmail() + ".");
-		notificationService.createNotification(user.getEmail(), "Your get a invitation for [" + event.getName() + "("
-				+ event.getEventId() + ")] from" + event.getUser().getEmail() + ".");
-		invitationDao.createOrUpdate(invitation);
 	}
 
 	private String createInvitationKey(String userEmail, String eventName, String eventCode) {

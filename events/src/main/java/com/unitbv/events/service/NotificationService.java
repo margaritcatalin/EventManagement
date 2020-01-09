@@ -11,5 +11,6 @@ public interface NotificationService {
 	SimpleResponse deleteNotification(String notificationCode);
 
 	SimpleResponse deleteAllNotification(String userEmail);
+
 	List<Notification> readAllByUserEmail(String email);
 }

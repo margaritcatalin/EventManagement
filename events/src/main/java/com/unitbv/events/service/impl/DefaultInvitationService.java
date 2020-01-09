@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Objects;
 
 import com.unitbv.events.dao.InvitationDao;
+import com.unitbv.events.dao.UserDao;
 import com.unitbv.events.data.InvitationData;
 import com.unitbv.events.data.InvitationFileData;
 import com.unitbv.events.model.Invitation;
+import com.unitbv.events.model.User;
 import com.unitbv.events.response.InvitationDataResponse;
 import com.unitbv.events.service.InvitationService;
 import com.unitbv.events.util.EntityDAOImplFactory;
@@ -16,9 +18,11 @@ public class DefaultInvitationService implements InvitationService {
 	private static final String PERSISTENCE_UNIT_NAME = "events";
 	private EntityDAOImplFactory entityDAOImplFactory;
 	private InvitationDao invitationDao;
+	private UserDao userDao;
 
 	public DefaultInvitationService() {
 		invitationDao = entityDAOImplFactory.createNewInvitationDao(PERSISTENCE_UNIT_NAME);
+		userDao = entityDAOImplFactory.createNewUserDao(PERSISTENCE_UNIT_NAME);
 	}
 
 	@Override
@@ -49,6 +53,12 @@ public class DefaultInvitationService implements InvitationService {
 			invitationDataResponse.setInvitations(invitations);
 		}
 		return invitationDataResponse;
+	}
+
+	@Override
+	public List<Invitation> readAllByUserEmail(String email) {
+		User user = userDao.findByEmail(email);
+		return invitationDao.findByUser(user);
 	}
 
 }

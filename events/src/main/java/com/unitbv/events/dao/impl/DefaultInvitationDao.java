@@ -8,6 +8,7 @@ import javax.persistence.Query;
 import com.unitbv.events.dao.InvitationDao;
 import com.unitbv.events.model.Event;
 import com.unitbv.events.model.Invitation;
+import com.unitbv.events.model.Notification;
 import com.unitbv.events.model.User;
 import com.unitbv.events.util.ConnectionManager;
 
@@ -130,6 +131,22 @@ public class DefaultInvitationDao implements InvitationDao {
 			em = conManager.getEMFactory().createEntityManager();
 
 			return em.createQuery("from Invitation i", Invitation.class).getResultList();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		} finally {
+			em.close();
+		}
+	}
+
+	@Override
+	public List<Invitation> findByUser(User user) {
+		try {
+			em = conManager.getEMFactory().createEntityManager();
+			Query query = em.createQuery("Select i FROM Invitation i WHERE i.user = :user",
+					Notification.class);
+			query.setParameter("user", user);
+			return query.getResultList();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null;
