@@ -28,6 +28,7 @@ import com.unitbv.events.request.SendInvitationRequest;
 import com.unitbv.events.response.EventDataResponse;
 import com.unitbv.events.response.SimpleResponse;
 import com.unitbv.events.service.EventService;
+import com.unitbv.events.service.NotificationService;
 import com.unitbv.events.util.EntityDAOImplFactory;
 
 public class DefaultEventService implements EventService {
@@ -37,12 +38,15 @@ public class DefaultEventService implements EventService {
 	private EventDao eventDao;
 	private RoleDao roleDao;
 	private InvitationDao invitationDao;
+	private NotificationService notificationService;
 
 	public DefaultEventService() {
 		userDao = entityDAOImplFactory.createNewUserDao(PERSISTENCE_UNIT_NAME);
 		eventDao = entityDAOImplFactory.createNewEventDao(PERSISTENCE_UNIT_NAME);
 		roleDao = entityDAOImplFactory.createNewRoleDao(PERSISTENCE_UNIT_NAME);
 		invitationDao = entityDAOImplFactory.createNewInvitationDao(PERSISTENCE_UNIT_NAME);
+		notificationService = new DefaultNotificationService();
+
 	}
 
 	@Override
@@ -176,6 +180,7 @@ public class DefaultEventService implements EventService {
 		event.setDate(request.getDate());
 		User user = userDao.findByEmail(request.getOrganizer());
 		event.setUser(user);
+		notificationService.createNotification(event.getUser().getEmail(), "Your event was created.");
 		return Objects.nonNull(eventDao.createOrUpdate(event));
 	}
 
@@ -187,6 +192,8 @@ public class DefaultEventService implements EventService {
 		event.setLocation(request.getLocation());
 		event.setNrSeats(request.getNrSeats());
 		event.setDate(request.getDate());
+		notificationService.createNotification(event.getUser().getEmail(),
+				"Your event [" + event.getEventId() + "] was edited.");
 		return Objects.nonNull(eventDao.createOrUpdate(event));
 	}
 
@@ -200,6 +207,8 @@ public class DefaultEventService implements EventService {
 				simpleResponse.setMessage("Event not found!");
 			} else {
 				simpleResponse.setStatusCode("200");
+				notificationService.createNotification(event.getUser().getEmail(),
+						"Your event [" + event.getEventId() + "] was deleted.");
 				eventDao.delete(event);
 			}
 		} catch (Exception e) {
@@ -265,6 +274,9 @@ public class DefaultEventService implements EventService {
 					.collect(Collectors.toList());
 			users.forEach(user -> createInvitation(sendInvitationRequest.getInvitationMessage(),
 					sendInvitationRequest.getEventCode(), user.getEmail()));
+			Event iEvent = eventDao.findById(Integer.valueOf(sendInvitationRequest.getEventCode()));
+			notificationService.createNotification(iEvent.getUser().getEmail(),
+					"Your invitation for [" + sendInvitationRequest.getEventCode() + "] was sent.");
 			return true;
 		} else if ("NONE".equalsIgnoreCase(sendInvitationRequest.getUserEmail())) {
 			return false;
@@ -273,6 +285,7 @@ public class DefaultEventService implements EventService {
 					sendInvitationRequest.getUserEmail());
 			return true;
 		}
+
 	}
 
 	private void createInvitation(String message, String eventCode, String email) {
@@ -294,6 +307,10 @@ public class DefaultEventService implements EventService {
 					createInvitationKey(email, event.getName(), eventCode).getBytes(Charset.forName("UTF-8")));
 			invitation.setInvitationfile(invitationFile);
 		}
+		notificationService.createNotification(event.getUser().getEmail(), "Your invitation for [" + event.getName()
+				+ "(" + event.getEventId() + ")] was sent to" + user.getEmail() + ".");
+		notificationService.createNotification(user.getEmail(), "Your get a invitation for [" + event.getName() + "("
+				+ event.getEventId() + ")] from" + event.getUser().getEmail() + ".");
 		invitationDao.createOrUpdate(invitation);
 	}
 
@@ -325,6 +342,12 @@ public class DefaultEventService implements EventService {
 								inv.setIsAccepted(true);
 								simpleResponse.setStatusCode("200");
 								simpleResponse.setMessage("Done!");
+								notificationService.createNotification(inv.getEvent().getUser().getEmail(),
+										"Your invitation for [" + inv.getEvent().getName() + "("
+												+ inv.getEvent().getEventId() + ")] was accepted by"
+												+ userModel.getEmail() + ".");
+								notificationService.createNotification(userModel.getEmail(),
+										"Your ticket was accepted. Event start at [" + inv.getEvent().getDate() + ".");
 								invitationDao.createOrUpdate(inv);
 								inv.getEvent().setNrSeats(inv.getEvent().getNrSeats() - 1);
 								eventDao.createOrUpdate(inv.getEvent());

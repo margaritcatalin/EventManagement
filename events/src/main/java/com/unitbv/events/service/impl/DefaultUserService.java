@@ -25,6 +25,7 @@ import com.unitbv.events.response.CustomerDataResponse;
 import com.unitbv.events.response.InvitationDataResponse;
 import com.unitbv.events.response.NotificationDataResponse;
 import com.unitbv.events.response.UserDataResponse;
+import com.unitbv.events.service.NotificationService;
 import com.unitbv.events.service.UserService;
 import com.unitbv.events.util.EntityDAOImplFactory;
 
@@ -34,10 +35,12 @@ public class DefaultUserService implements UserService {
 	private EntityDAOImplFactory entityDAOImplFactory;
 	private UserDao userDao;
 	private RoleDao roleDao;
+	private NotificationService notificationService;
 
 	public DefaultUserService() {
 		userDao = entityDAOImplFactory.createNewUserDao(PERSISTENCE_UNIT_NAME);
 		roleDao = entityDAOImplFactory.createNewRoleDao(PERSISTENCE_UNIT_NAME);
+		notificationService = new DefaultNotificationService();
 
 	}
 
@@ -142,6 +145,7 @@ public class DefaultUserService implements UserService {
 		}
 		userModel.setFirstName(request.getFirstName());
 		userModel.setLastName(request.getLastName());
+		notificationService.createNotification(userModel.getEmail(), "Your profile was updated.");
 		return Objects.nonNull(userDao.createOrUpdate(userModel));
 	}
 
@@ -149,6 +153,7 @@ public class DefaultUserService implements UserService {
 	public boolean updateUserAvailability(AvailabilityRequest request) {
 		User userModel = userDao.findByEmail(request.getCurrentEmail());
 		userModel.setIsAvailable(request.getAvailable());
+		notificationService.createNotification(userModel.getEmail(), "Your availability was changed.");
 		return Objects.nonNull(userDao.createOrUpdate(userModel));
 	}
 
@@ -164,6 +169,7 @@ public class DefaultUserService implements UserService {
 			userModel.getNotifications().stream().forEach(not -> {
 				NotificationData notificationData = new NotificationData();
 				notificationData.setDescription(not.getDescription());
+				notificationData.setNotificationId(String.valueOf(not.getNotificationId()));
 				notifications.add(notificationData);
 			});
 			notificationDataResponse.setNotifications(notifications);
@@ -287,6 +293,7 @@ public class DefaultUserService implements UserService {
 		} else {
 			userModel.setIsActive(true);
 		}
+		notificationService.createNotification(userModel.getEmail(), "Your account was deactivated.");
 		return Objects.nonNull(userDao.createOrUpdate(userModel));
 	}
 
