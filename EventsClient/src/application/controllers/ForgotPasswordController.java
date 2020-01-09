@@ -1,17 +1,12 @@
 package application.controllers;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import application.request.AcceptInvitationRequest;
-import application.util.ValidationUtil;
-import com.google.gson.Gson;
-
 import application.request.LoginRequest;
 import application.response.SimpleResponse;
 import application.util.ClientUtil;
 import application.util.SessionInfo;
+import application.util.ValidationUtil;
+import com.google.gson.Gson;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,10 +20,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * @author Catalin
- */
-public class LoginController implements Initializable {
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class ForgotPasswordController implements Initializable {
 
     @FXML
     private Label lblErrors;
@@ -36,16 +32,6 @@ public class LoginController implements Initializable {
     private Label lblForgotStatus;
     @FXML
     private TextField txtUsername;
-
-    @FXML
-    private TextField txtPassword;
-
-    @FXML
-    private Button btnSignin;
-    @FXML
-    private Label btnForgot;
-    @FXML
-    private Button btnSignup;
     @FXML
     private Button btnEnterCode;
     @FXML
@@ -58,48 +44,6 @@ public class LoginController implements Initializable {
     private TextField txtConfirmNewPassword;
     @FXML
     private TextField txtNewPassword;
-
-    @FXML
-    public void handleLoginButtonAction(MouseEvent event) {
-
-        if (event.getSource() == btnSignin) {
-            // login here
-            if (logIn().equals("Success")) {
-                try {
-                    SessionInfo.currentUserEmail = txtUsername.getText();
-                    Node node = (Node) event.getSource();
-                    Stage stage = (Stage) node.getScene().getWindow();
-                    //stage.setMaximized(true);
-                    stage.close();
-                    Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/AdminHomeView.fxml")));
-                    stage.setScene(scene);
-                    stage.show();
-                } catch (IOException ex) {
-                    System.err.println(ex.getMessage());
-                }
-
-            }
-        }
-    }
-
-    @FXML
-    public void handleForgotButtonAction(MouseEvent event) {
-
-        if (event.getSource() == btnForgot) {
-            // login here
-            try {
-                SessionInfo.currentUserEmail = txtUsername.getText();
-                Node node = (Node) event.getSource();
-                Stage stage = (Stage) node.getScene().getWindow();
-                stage.close();
-                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/ForgotView.fxml")));
-                stage.setScene(scene);
-                stage.show();
-            } catch (IOException ex) {
-                System.err.println(ex.getMessage());
-            }
-        }
-    }
 
     @FXML
     public void handleSendEmailButtonAction(MouseEvent event) {
@@ -161,7 +105,7 @@ public class LoginController implements Initializable {
 
         if (event.getSource() == btnChangePassword) {
             // login here
-            if (!ValidationUtil.validatePassword(txtNewPassword.getText(), txtConfirmNewPassword.getText())) {
+            if (ValidationUtil.validatePassword(txtNewPassword.getText(), txtConfirmNewPassword.getText())) {
                 AcceptInvitationRequest acceptInvitationRequest = new AcceptInvitationRequest();
                 acceptInvitationRequest.setInvitationCode(txtNewPassword.getText());
                 acceptInvitationRequest.setUserEmail(SessionInfo.getSelectedUserEmail());
@@ -203,66 +147,9 @@ public class LoginController implements Initializable {
         }
     }
 
-    @FXML
-    public void handleRegisterButtonAction(MouseEvent event) {
-
-        if (event.getSource() == btnSignup) {
-            try {
-                Node node = (Node) event.getSource();
-                Stage stage = (Stage) node.getScene().getWindow();
-                // stage.setMaximized(true);
-                stage.close();
-                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/RegistrationView.fxml")));
-                stage.setScene(scene);
-                stage.show();
-
-            } catch (IOException ex) {
-                System.err.println(ex.getMessage());
-            }
-
-        }
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        lblErrors.setTextFill(Color.GREEN);
-        lblErrors.setText("Server is up : Good to go");
-    }
 
-    private String logIn() {
-        String status = "Success";
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail(txtUsername.getText());
-        loginRequest.setPassword(txtPassword.getText());
-        if (loginRequest.getEmail().isEmpty() || loginRequest.getPassword().isEmpty()
-                || !ValidationUtil.validateEmail((loginRequest.getEmail()))) {
-            setLblError(Color.TOMATO, "Invalid credentials");
-            status = "Error";
-        } else {
-            Gson gson = new Gson();
-            try {
-                String request = gson.toJson(loginRequest);
-                String serverResponse = ClientUtil.communicateWithServer("login", request);
-                SimpleResponse response = gson.fromJson(serverResponse, SimpleResponse.class);
-                if (!"200".equalsIgnoreCase(response.getStatusCode())) {
-                    setLblError(Color.TOMATO, "Enter Correct Email/Password");
-                    status = "Error";
-                } else {
-                    setLblError(Color.GREEN, "Login Successful..Redirecting..");
-                }
-            } catch (Exception e) {
-                status = "Error";
-                lblErrors.setTextFill(Color.TOMATO);
-                lblErrors.setText("Server Error : Check");
-            }
-        }
-
-        return status;
-    }
-
-    private void setLblError(Color color, String text) {
-        lblErrors.setTextFill(color);
-        lblErrors.setText(text);
     }
 
     private void setForgotStatusLabel(Color color, String text) {

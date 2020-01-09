@@ -139,6 +139,23 @@ public class ServerUtilities implements Runnable {
 					bufferedOutputWriter.write(gson.toJson(eventService.acceptInvitation(acceptInvitationRequest)));
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
+				} else if ("enterForgotCode".equalsIgnoreCase(inputCommand)) {
+					AcceptInvitationRequest acceptInvitationRequest = gson.fromJson(receivedData,
+							AcceptInvitationRequest.class);
+					bufferedOutputWriter
+							.write(gson.toJson(userService.enterForgotPasswordCode(acceptInvitationRequest)));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("changePassword".equalsIgnoreCase(inputCommand)) {
+					AcceptInvitationRequest acceptInvitationRequest = gson.fromJson(receivedData,
+							AcceptInvitationRequest.class);
+					bufferedOutputWriter.write(gson.toJson(userService.changePassword(acceptInvitationRequest)));
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
+				} else if ("sendForgotCode".equalsIgnoreCase(inputCommand)) {
+					userService.forgotPassword(receivedData);
+					bufferedOutputWriter.newLine();
+					bufferedOutputWriter.flush();
 				} else if ("getAllEvents".equalsIgnoreCase(inputCommand)) {
 					String currentUserEmail = receivedData;
 					bufferedOutputWriter.write(gson.toJson(eventService.getAllEvents(currentUserEmail)));

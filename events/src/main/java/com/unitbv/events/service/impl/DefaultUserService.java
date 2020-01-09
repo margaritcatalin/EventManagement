@@ -1,11 +1,26 @@
 package com.unitbv.events.service.impl;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import com.mysql.cj.util.StringUtils;
 import com.unitbv.events.dao.RoleDao;
 import com.unitbv.events.dao.UserDao;
@@ -19,12 +34,14 @@ import com.unitbv.events.data.UserData;
 import com.unitbv.events.model.Notification;
 import com.unitbv.events.model.Role;
 import com.unitbv.events.model.User;
+import com.unitbv.events.request.AcceptInvitationRequest;
 import com.unitbv.events.request.AvailabilityRequest;
 import com.unitbv.events.request.EditProfileRequest;
 import com.unitbv.events.request.RegisterRequest;
 import com.unitbv.events.response.CustomerDataResponse;
 import com.unitbv.events.response.InvitationDataResponse;
 import com.unitbv.events.response.NotificationDataResponse;
+import com.unitbv.events.response.SimpleResponse;
 import com.unitbv.events.response.UserDataResponse;
 import com.unitbv.events.service.NotificationService;
 import com.unitbv.events.service.UserService;
@@ -168,14 +185,13 @@ public class DefaultUserService implements UserService {
 			notificationDataResponse.setStatusCode("200");
 			List<NotificationData> notifications = new ArrayList<>();
 			try {
-			notificationService.readAllByUserEmail(currentUserEmail)
-			.forEach(not -> {
-				NotificationData notificationData = new NotificationData();
-				notificationData.setDescription(not.getDescription());
-				notificationData.setNotificationId(String.valueOf(not.getNotificationId()));
-				notifications.add(notificationData);
-			});
-			}catch (Exception e) {
+				notificationService.readAllByUserEmail(currentUserEmail).forEach(not -> {
+					NotificationData notificationData = new NotificationData();
+					notificationData.setDescription(not.getDescription());
+					notificationData.setNotificationId(String.valueOf(not.getNotificationId()));
+					notifications.add(notificationData);
+				});
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			notificationDataResponse.setNotifications(notifications);
@@ -301,6 +317,78 @@ public class DefaultUserService implements UserService {
 		}
 		notificationService.createNotification(userModel.getEmail(), "Your account was deactivated.");
 		return Objects.nonNull(userDao.createOrUpdate(userModel));
+	}
+
+	@Override
+	public void forgotPassword(String customerEmail) {
+		User user = userDao.findByEmail(customerEmail);
+		final String username = "licentarentcar@gmail.com";
+		final String password = "catamarg1234";
+		Properties prop = new Properties();
+		prop.put("mail.smtp.host", "smtp.gmail.com");
+		prop.put("mail.smtp.port", "587");
+		prop.put("mail.smtp.auth", "true");
+		prop.put("mail.smtp.starttls.enable", "true"); // TLS
+		Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		});
+		try {
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress("licentarentcar@gmail.com"));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(customerEmail));
+			message.setSubject("Forgot password");
+			message.setText("Dear " + user.getFirstName() + " " + user.getLastName() + ","
+					+ "\n\n Please use this code: "
+					+ createForgotPasswordKey(user.getEmail(), user.getPassword(), String.valueOf(user.getUserId())));
+
+			Transport.send(message);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public SimpleResponse enterForgotPasswordCode(AcceptInvitationRequest request) {
+		SimpleResponse simpleResponse = new SimpleResponse();
+		User user = userDao.findByEmail(request.getUserEmail());
+		if (Objects.isNull(user)) {
+			simpleResponse.setStatusCode("500");
+			simpleResponse.setMessage("User not found!");
+		} else if (request.getInvitationCode().equals(
+				createForgotPasswordKey(user.getEmail(), user.getPassword(), String.valueOf(user.getUserId())))) {
+				simpleResponse.setStatusCode("200");
+				simpleResponse.setMessage("Done!");
+		}
+		return simpleResponse;
+	}
+
+	@Override
+	public SimpleResponse changePassword(AcceptInvitationRequest request) {
+		SimpleResponse simpleResponse = new SimpleResponse();
+		User user = userDao.findByEmail(request.getUserEmail());
+		if (Objects.isNull(user)) {
+			simpleResponse.setStatusCode("500");
+			simpleResponse.setMessage("User not found!");
+		} else if (!StringUtils.isEmptyOrWhitespaceOnly(request.getInvitationCode())) {
+			user.setPassword(request.getInvitationCode());
+			userDao.createOrUpdate(user);
+			notificationService.createNotification(user.getEmail(), "Your profile was updated.");
+			simpleResponse.setStatusCode("200");
+			simpleResponse.setMessage("Done!");
+		}else {
+			simpleResponse.setStatusCode("404");
+			simpleResponse.setMessage("Your password is invalid!");
+		}
+		return simpleResponse;
+	}
+
+	private String createForgotPasswordKey(String userEmail, String lastPassword, String userCode) {
+		String stringToHash = userEmail + "-" + lastPassword + "-" + userCode;
+		HashFunction md5 = Hashing.md5();
+		HashCode hashString = md5.hashString(stringToHash, Charset.defaultCharset());
+		return hashString.toString();
 	}
 
 }

@@ -1,11 +1,13 @@
 package com.unitbv.events.service;
 
+import com.unitbv.events.request.AcceptInvitationRequest;
 import com.unitbv.events.request.AvailabilityRequest;
 import com.unitbv.events.request.EditProfileRequest;
 import com.unitbv.events.request.RegisterRequest;
 import com.unitbv.events.response.CustomerDataResponse;
 import com.unitbv.events.response.InvitationDataResponse;
 import com.unitbv.events.response.NotificationDataResponse;
+import com.unitbv.events.response.SimpleResponse;
 import com.unitbv.events.response.UserDataResponse;
 
 public interface UserService {
@@ -35,4 +37,10 @@ public interface UserService {
 	CustomerDataResponse getAllCustomers();
 
 	CustomerDataResponse getAllOrganizers();
+
+	void forgotPassword(String customerEmail);
+
+	SimpleResponse enterForgotPasswordCode(AcceptInvitationRequest request);
+
+	SimpleResponse changePassword(AcceptInvitationRequest request);
 }
