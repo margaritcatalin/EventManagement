@@ -121,7 +121,7 @@
                         <Insets left="50.0" />
                     </padding>
                 </Button>
-                <Label prefHeight="30.0" prefWidth="252.0" text="USERS" textFill="#171717">
+                <Label fx:id="lblUsersSection" prefHeight="30.0" prefWidth="252.0" text="USERS" textFill="#171717">
                     <font>
                         <Font size="13.0" />
                     </font>

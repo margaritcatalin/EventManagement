@@ -2,8 +2,10 @@ package application.controllers;
 
 import application.data.CustomerData;
 import application.data.UserData;
+import application.request.GetUserRequst;
 import application.response.CustomerDataResponse;
 import application.response.SimpleResponse;
+import application.response.UserDataResponse;
 import application.util.ClientUtil;
 import application.util.SessionInfo;
 import com.google.gson.Gson;
@@ -50,6 +52,18 @@ public class UsersController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        GetUserRequst getUserRequst = new GetUserRequst();
+        getUserRequst.setEmail(SessionInfo.getCurrentUserEmail());
+        Gson gson = new Gson();
+        String request = gson.toJson(getUserRequst);
+        String serverResponse = ClientUtil.communicateWithServer("getUser", request);
+        UserDataResponse response = gson.fromJson(serverResponse, UserDataResponse.class);
+        if ("200".equalsIgnoreCase(response.getStatusCode())) {
+            UserData userData = response.getUserData();
+            if (!"ADMIN".equalsIgnoreCase(userData.getRoles().get(0).getRoleName())) {
+                btnDeactivateUser.setVisible(false);
+            }
+        }
         fetColumnList();
         fetRowList();
     }

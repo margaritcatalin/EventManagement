@@ -26,6 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -40,7 +41,8 @@ public class AdminController implements Initializable {
 
     @FXML
     private Label lblUserRole;
-
+    @FXML
+    private Label lblUserSection;
     @FXML
     private Button btnCreateEvent;
 
@@ -124,6 +126,8 @@ public class AdminController implements Initializable {
             try {
                 root = FXMLLoader.load(getClass().getResource("../ui/NotificationView.fxml"));
                 Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initOwner(btnNotificationEvent.getScene().getWindow());
                 stage.setScene(new Scene(root));
                 stage.show();
             } catch (IOException e) {
@@ -139,6 +143,8 @@ public class AdminController implements Initializable {
             try {
                 root = FXMLLoader.load(getClass().getResource("../ui/InvitationView.fxml"));
                 Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initOwner(btnNotificationEvent.getScene().getWindow());
                 stage.setScene(new Scene(root));
                 stage.show();
             } catch (IOException e) {
@@ -154,6 +160,8 @@ public class AdminController implements Initializable {
             try {
                 root = FXMLLoader.load(getClass().getResource("../ui/OrganizersListView.fxml"));
                 Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initOwner(btnNotificationEvent.getScene().getWindow());
                 stage.setScene(new Scene(root));
                 stage.show();
             } catch (IOException e) {
@@ -169,6 +177,8 @@ public class AdminController implements Initializable {
             try {
                 root = FXMLLoader.load(getClass().getResource("../ui/UsersListView.fxml"));
                 Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initOwner(btnNotificationEvent.getScene().getWindow());
                 stage.setScene(new Scene(root));
                 stage.show();
             } catch (IOException e) {
@@ -184,6 +194,8 @@ public class AdminController implements Initializable {
             try {
                 root = FXMLLoader.load(getClass().getResource("../ui/CustomersListView.fxml"));
                 Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initOwner(btnNotificationEvent.getScene().getWindow());
                 stage.setScene(new Scene(root));
                 stage.show();
             } catch (IOException e) {
@@ -256,6 +268,13 @@ public class AdminController implements Initializable {
             UserDataResponse response = gson.fromJson(serverResponse, UserDataResponse.class);
             if ("200".equalsIgnoreCase(response.getStatusCode())) {
                 UserData userData = response.getUserData();
+                if("CUSTOMER".equalsIgnoreCase(userData.getRoles().get(0).getRoleName())) {
+                    btnCreateEvent.setVisible(false);
+                    btnUsersEvent.setVisible(false);
+                    btnCustomersEvent.setVisible(false);
+                    btnOrganizersEvent.setVisible(false);
+                    lblUserSection.setVisible(false);
+                }
                 lblUserName.setText(userData.getFirstName() + " " + userData.getLastName());
                 lblUserRole.setText(userData.getRoles().get(0).getRoleName());
                 if (userData.getAvailability()) {
