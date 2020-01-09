@@ -16,6 +16,7 @@ import com.unitbv.events.data.InvitationFileData;
 import com.unitbv.events.data.NotificationData;
 import com.unitbv.events.data.RoleData;
 import com.unitbv.events.data.UserData;
+import com.unitbv.events.model.Notification;
 import com.unitbv.events.model.Role;
 import com.unitbv.events.model.User;
 import com.unitbv.events.request.AvailabilityRequest;
@@ -166,12 +167,17 @@ public class DefaultUserService implements UserService {
 		} else {
 			notificationDataResponse.setStatusCode("200");
 			List<NotificationData> notifications = new ArrayList<>();
-			userModel.getNotifications().stream().forEach(not -> {
+			try {
+			notificationService.readAllByUserEmail(currentUserEmail)
+			.forEach(not -> {
 				NotificationData notificationData = new NotificationData();
 				notificationData.setDescription(not.getDescription());
 				notificationData.setNotificationId(String.valueOf(not.getNotificationId()));
 				notifications.add(notificationData);
 			});
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
 			notificationDataResponse.setNotifications(notifications);
 		}
 		return notificationDataResponse;

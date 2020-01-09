@@ -1,8 +1,16 @@
 package com.unitbv.events.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 
 /**
  * The persistent class for the notification database table.
@@ -19,10 +27,10 @@ public class Notification implements Serializable {
 
 	private String description;
 
-	// bi-directional many-to-many association to User
-	@ManyToMany
-	@JoinTable(name = "NotificationToUser", joinColumns = @JoinColumn(name = "notificationId"), inverseJoinColumns = @JoinColumn(name = "userId"))
-	private List<User> users;
+	// bi-directional many-to-one association to User
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "userId")
+	private User user;
 
 	public Notification() {
 	}
@@ -43,12 +51,12 @@ public class Notification implements Serializable {
 		this.description = description;
 	}
 
-	public List<User> getUsers() {
-		return this.users;
+	public User getUser() {
+		return user;
 	}
 
-	public void setUsers(List<User> users) {
-		this.users = users;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.unitbv.events.service;
 
+import java.util.List;
+
 import com.unitbv.events.model.Notification;
 import com.unitbv.events.response.SimpleResponse;
 
@@ -9,5 +11,5 @@ public interface NotificationService {
 	SimpleResponse deleteNotification(String notificationCode);
 
 	SimpleResponse deleteAllNotification(String userEmail);
-
+	List<Notification> readAllByUserEmail(String email);
 }

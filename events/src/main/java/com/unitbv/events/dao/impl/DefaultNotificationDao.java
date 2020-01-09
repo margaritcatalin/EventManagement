@@ -3,9 +3,13 @@ package com.unitbv.events.dao.impl;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import com.unitbv.events.dao.NotificationDao;
+import com.unitbv.events.model.Event;
+import com.unitbv.events.model.Invitation;
 import com.unitbv.events.model.Notification;
+import com.unitbv.events.model.User;
 import com.unitbv.events.util.ConnectionManager;
 
 public class DefaultNotificationDao implements NotificationDao {
@@ -110,6 +114,22 @@ public class DefaultNotificationDao implements NotificationDao {
 			em = conManager.getEMFactory().createEntityManager();
 
 			return em.createQuery("from Notification n", Notification.class).getResultList();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		} finally {
+			em.close();
+		}
+	}
+	
+	@Override
+	public List<Notification> findByUser(User user) {
+		try {
+			em = conManager.getEMFactory().createEntityManager();
+			Query query = em.createQuery("Select n FROM Notification n WHERE n.user = :user",
+					Notification.class);
+			query.setParameter("user", user);
+			return query.getResultList();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null;

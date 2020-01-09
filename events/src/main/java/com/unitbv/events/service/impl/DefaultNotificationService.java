@@ -1,12 +1,12 @@
 package com.unitbv.events.service.impl;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.mysql.cj.util.StringUtils;
 import com.unitbv.events.dao.NotificationDao;
 import com.unitbv.events.dao.UserDao;
-import com.unitbv.events.model.Event;
 import com.unitbv.events.model.Notification;
 import com.unitbv.events.model.User;
 import com.unitbv.events.response.SimpleResponse;
@@ -36,7 +36,7 @@ public class DefaultNotificationService implements NotificationService {
 		}
 		Notification notification = new Notification();
 		notification.setDescription(message);
-		notification.setUsers(Arrays.asList(user));
+		notification.setUser(user);
 		return notificationDao.createOrUpdate(notification);
 	}
 
@@ -62,10 +62,18 @@ public class DefaultNotificationService implements NotificationService {
 	@Override
 	public SimpleResponse deleteAllNotification(String userEmail) {
 		SimpleResponse simpleResponse = new SimpleResponse();
-		User user = new User();
-		user.getNotifications().forEach(not -> notificationDao.delete(not));
+		User user = userDao.findByEmail(userEmail);
+		while (readAllByUserEmail(userEmail).size() > 0) {
+			notificationDao.delete(readAllByUserEmail(userEmail).get(0));
+		}
 		simpleResponse.setStatusCode("200");
 		return simpleResponse;
+	}
+
+	@Override
+	public List<Notification> readAllByUserEmail(String email) {
+		User user = userDao.findByEmail(email);
+		return notificationDao.findByUser(user);
 	}
 
 }

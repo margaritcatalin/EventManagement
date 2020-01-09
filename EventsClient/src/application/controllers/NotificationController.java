@@ -52,10 +52,10 @@ public class NotificationController implements Initializable {
             SimpleResponse response = gson.fromJson(serverResponse, SimpleResponse.class);
             if ("200".equalsIgnoreCase(response.getStatusCode())) {
                 setStatusLabel(Color.GREEN, "Done");
-                fetRowList();
             } else {
                 setStatusLabel(Color.TOMATO, "We have an error!");
             }
+            fetRowList();
         }
     }
 
@@ -73,10 +73,10 @@ public class NotificationController implements Initializable {
             SimpleResponse response = gson.fromJson(serverResponse, SimpleResponse.class);
             if ("200".equalsIgnoreCase(response.getStatusCode())) {
                 setStatusLabel(Color.GREEN, "Done");
-                fetRowList();
             } else {
                 setStatusLabel(Color.TOMATO, "We have an error!");
             }
+            fetRowList();
         } else {
             setStatusLabel(Color.TOMATO, "You need to select a user!");
         }

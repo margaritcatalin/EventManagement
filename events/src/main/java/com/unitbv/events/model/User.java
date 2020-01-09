@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,8 +49,8 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "user")
 	private List<Invitation> invitations;
 
-	// bi-directional many-to-many association to Notification
-	@ManyToMany(mappedBy = "users")
+	// bi-directional many-to-one association to Event
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private List<Notification> notifications;
 
 	// bi-directional many-to-many association to Role

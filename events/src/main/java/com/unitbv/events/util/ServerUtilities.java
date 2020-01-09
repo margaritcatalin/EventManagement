@@ -171,17 +171,14 @@ public class ServerUtilities implements Runnable {
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
 				} else if ("getAllUsers".equalsIgnoreCase(inputCommand)) {
-					String currentUserEmail = receivedData;
 					bufferedOutputWriter.write(gson.toJson(userService.getAllUsers()));
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
 				} else if ("getAllCustomers".equalsIgnoreCase(inputCommand)) {
-					String currentUserEmail = receivedData;
 					bufferedOutputWriter.write(gson.toJson(userService.getAllCustomers()));
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
 				} else if ("getAllOrganizers".equalsIgnoreCase(inputCommand)) {
-					String currentUserEmail = receivedData;
 					bufferedOutputWriter.write(gson.toJson(userService.getAllOrganizers()));
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
