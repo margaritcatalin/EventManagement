@@ -42,7 +42,7 @@ public class AdminController implements Initializable {
     @FXML
     private Label lblUserRole;
     @FXML
-    private Label lblUserSection;
+    private Label lblUsersSection;
     @FXML
     private Button btnCreateEvent;
 
@@ -273,7 +273,7 @@ public class AdminController implements Initializable {
                     btnUsersEvent.setVisible(false);
                     btnCustomersEvent.setVisible(false);
                     btnOrganizersEvent.setVisible(false);
-                    lblUserSection.setVisible(false);
+                    lblUsersSection.setVisible(false);
                 }
                 lblUserName.setText(userData.getFirstName() + " " + userData.getLastName());
                 lblUserRole.setText(userData.getRoles().get(0).getRoleName());
@@ -296,7 +296,7 @@ public class AdminController implements Initializable {
                 }
             }
         } catch (Exception e) {
-            // TO DO
+           e.printStackTrace();
         }
     }
 
