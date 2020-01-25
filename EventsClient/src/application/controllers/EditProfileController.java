@@ -98,7 +98,7 @@ public class EditProfileController implements Initializable {
             Stage stage = (Stage) node.getScene().getWindow();
             // stage.setMaximized(true);
             stage.close();
-            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/AdminHomeView.fxml")));
+            Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/AdminHomeView.fxml")));
             stage.setScene(scene);
             stage.show();
 

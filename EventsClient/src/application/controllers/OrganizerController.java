@@ -78,7 +78,7 @@ public class OrganizerController implements Initializable {
                 Stage stage = (Stage) node.getScene().getWindow();
                 stage.setMaximized(false);
                 stage.close();
-                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/UserEventsView.fxml")));
+                Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/UserEventsView.fxml")));
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException e) {

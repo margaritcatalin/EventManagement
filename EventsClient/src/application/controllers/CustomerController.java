@@ -60,7 +60,7 @@ public class CustomerController implements Initializable {
                 Stage stage = (Stage) node.getScene().getWindow();
                 stage.setMaximized(false);
                 stage.close();
-                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/InviteCustomerEventView.fxml")));
+                Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/InviteCustomerEventView.fxml")));
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException e) {

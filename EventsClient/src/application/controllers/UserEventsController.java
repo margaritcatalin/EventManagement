@@ -61,7 +61,7 @@ public class UserEventsController implements Initializable {
             Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();
             stage.close();
-            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/OrganizersListView.fxml")));
+            Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/OrganizersListView.fxml")));
             stage.setScene(scene);
             stage.show();
 

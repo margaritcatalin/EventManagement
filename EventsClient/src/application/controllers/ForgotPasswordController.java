@@ -58,7 +58,7 @@ public class ForgotPasswordController implements Initializable {
                     Node node = (Node) event.getSource();
                     Stage stage = (Stage) node.getScene().getWindow();
                     stage.close();
-                    Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/ForgotCodeView.fxml")));
+                    Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/ForgotCodeView.fxml")));
                     stage.setScene(scene);
                     stage.show();
                 }
@@ -85,7 +85,7 @@ public class ForgotPasswordController implements Initializable {
                         Node node = (Node) event.getSource();
                         Stage stage = (Stage) node.getScene().getWindow();
                         stage.close();
-                        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/ChangePasswordView.fxml")));
+                        Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/ChangePasswordView.fxml")));
                         stage.setScene(scene);
                         stage.show();
                     } catch (IOException ex) {
@@ -138,7 +138,7 @@ public class ForgotPasswordController implements Initializable {
             Stage stage = (Stage) node.getScene().getWindow();
             // stage.setMaximized(true);
             stage.close();
-            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/LoginView.fxml")));
+            Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/LoginView.fxml")));
             stage.setScene(scene);
             stage.show();
 

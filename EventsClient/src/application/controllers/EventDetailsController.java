@@ -94,7 +94,7 @@ public class EventDetailsController implements Initializable {
             Stage stage = (Stage) node.getScene().getWindow();
             // stage.setMaximized(true);
             stage.close();
-            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/InvitationView.fxml")));
+            Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/InvitationView.fxml")));
             stage.setScene(scene);
             stage.show();
 

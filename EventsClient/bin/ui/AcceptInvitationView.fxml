@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="283.0" prefWidth="833.0" style="-fx-background-color: #FFF;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.AcceptInvitationController">
+    <children>
+        <Pane layoutY="6.0" prefHeight="116.0" prefWidth="1101.0" style="-fx-background-color: #0C39FF;" AnchorPane.bottomAnchor="161.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="6.0">
+            <children>
+                <ImageView fitHeight="110.0" fitWidth="82.0" layoutX="382.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../logo.png" />
+                    </image>
+                </ImageView>
+                <Label alignment="CENTER" layoutX="464.0" layoutY="28.0" prefHeight="23.0" prefWidth="173.0" text="Events Management" textFill="WHITE">
+                    <font>
+                        <Font name="Segoe UI" size="18.0" />
+                    </font>
+                </Label>
+                <Label alignment="CENTER" layoutX="494.0" layoutY="59.0" prefHeight="23.0" prefWidth="114.0" text="Accept invitation" textFill="WHITE">
+                    <font>
+                        <Font name="Segoe UI" size="12.0" />
+                    </font>
+                </Label>
+            <Label fx:id="lblStatus" alignment="CENTER" layoutX="398.0" layoutY="85.0" prefHeight="23.0" prefWidth="287.0" text="" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI" size="12.0" />
+               </font>
+            </Label>
+            </children>
+        </Pane>
+      <Pane layoutY="208.0" prefHeight="75.0" prefWidth="1101.0" style="-fx-background-color: #0C39FF;">
+         <children>
+                <Button fx:id="btnBack" layoutX="420.0" layoutY="22.0" mnemonicParsing="false" onMouseClicked="#handleBackAction" prefHeight="32.0" prefWidth="173.0" styleClass="button2" stylesheets="@../style.css" text="Back" />
+            <Button fx:id="btnAcceptInvitation" layoutX="604.0" layoutY="22.0" mnemonicParsing="false" onMouseClicked="#handleAcceptInvitationAction" prefHeight="32.0" prefWidth="173.0" styleClass="button2" stylesheets="@../style.css" text="Accept" />
+         </children>
+      </Pane>
+        <TextField fx:id="txtDescription" layoutX="11.0" layoutY="131.0" prefHeight="69.0" prefWidth="1079.0" promptText="Invitation key" />
+    </children>
+</AnchorPane>

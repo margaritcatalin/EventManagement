@@ -138,7 +138,7 @@ public class InviteUserController implements Initializable {
             Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();
             stage.close();
-            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/UsersListView.fxml")));
+            Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/UsersListView.fxml")));
             stage.setScene(scene);
             stage.show();
 
@@ -154,7 +154,7 @@ public class InviteUserController implements Initializable {
             Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();
             stage.close();
-            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/CustomersListView.fxml")));
+            Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/CustomersListView.fxml")));
             stage.setScene(scene);
             stage.show();
 

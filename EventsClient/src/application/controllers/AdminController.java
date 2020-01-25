@@ -124,7 +124,7 @@ public class AdminController implements Initializable {
         if (event.getSource() == btnNotificationEvent) {
             Parent root;
             try {
-                root = FXMLLoader.load(getClass().getResource("../ui/NotificationView.fxml"));
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/NotificationView.fxml"));
                 Stage stage = new Stage();
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.initOwner(btnNotificationEvent.getScene().getWindow());
@@ -141,7 +141,7 @@ public class AdminController implements Initializable {
         if (event.getSource() == btnInvitationEvent) {
             Parent root;
             try {
-                root = FXMLLoader.load(getClass().getResource("../ui/InvitationView.fxml"));
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/InvitationView.fxml"));
                 Stage stage = new Stage();
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.initOwner(btnNotificationEvent.getScene().getWindow());
@@ -158,7 +158,7 @@ public class AdminController implements Initializable {
         if (event.getSource() == btnOrganizersEvent) {
             Parent root;
             try {
-                root = FXMLLoader.load(getClass().getResource("../ui/OrganizersListView.fxml"));
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/OrganizersListView.fxml"));
                 Stage stage = new Stage();
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.initOwner(btnNotificationEvent.getScene().getWindow());
@@ -175,7 +175,7 @@ public class AdminController implements Initializable {
         if (event.getSource() == btnUsersEvent) {
             Parent root;
             try {
-                root = FXMLLoader.load(getClass().getResource("../ui/UsersListView.fxml"));
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/UsersListView.fxml"));
                 Stage stage = new Stage();
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.initOwner(btnNotificationEvent.getScene().getWindow());
@@ -192,7 +192,7 @@ public class AdminController implements Initializable {
         if (event.getSource() == btnCustomersEvent) {
             Parent root;
             try {
-                root = FXMLLoader.load(getClass().getResource("../ui/CustomersListView.fxml"));
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/CustomersListView.fxml"));
                 Stage stage = new Stage();
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.initOwner(btnNotificationEvent.getScene().getWindow());
@@ -212,7 +212,7 @@ public class AdminController implements Initializable {
                 Stage stage = (Stage) node.getScene().getWindow();
                 stage.setMaximized(false);
                 stage.close();
-                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/CreateEventView.fxml")));
+                Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/CreateEventView.fxml")));
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException e) {
@@ -229,7 +229,7 @@ public class AdminController implements Initializable {
                 Stage stage = (Stage) node.getScene().getWindow();
                 stage.setMaximized(false);
                 stage.close();
-                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/EditProfileView.fxml")));
+                Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/EditProfileView.fxml")));
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException e) {
@@ -248,7 +248,7 @@ public class AdminController implements Initializable {
                 Stage stage = (Stage) node.getScene().getWindow();
                 stage.setMaximized(false);
                 stage.close();
-                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/LoginView.fxml")));
+                Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/LoginView.fxml")));
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException e) {
@@ -304,9 +304,9 @@ public class AdminController implements Initializable {
         pnl_scroll.getChildren().clear();
 
         Node[] nodes = new Node[eventDataList.size()];
-        for (int i = 0; i <= eventDataList.size(); i++) {
+        for (int i = 0; i <= eventDataList.size()-1; i++) {
             try {
-                nodes[i] = (Node) FXMLLoader.load(getClass().getResource("../ui/Event.fxml"));
+                nodes[i] = (Node) FXMLLoader.load(getClass().getClassLoader().getResource("ui/Event.fxml"));
                 ((Label) ((Pane) ((AnchorPane) nodes[i]).getChildren().get(0)).getChildren().get(2))
                         .setText(eventDataList.get(i).getName());
                 ((Label) ((Pane) ((AnchorPane) nodes[i]).getChildren().get(0)).getChildren().get(5))

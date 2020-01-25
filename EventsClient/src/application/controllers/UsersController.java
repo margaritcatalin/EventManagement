@@ -82,7 +82,7 @@ public class UsersController implements Initializable {
                 Stage stage = (Stage) node.getScene().getWindow();
                 stage.setMaximized(false);
                 stage.close();
-                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/InviteUserEventView.fxml")));
+                Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/InviteUserEventView.fxml")));
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException e) {
@@ -125,7 +125,7 @@ public class UsersController implements Initializable {
                 Stage stage = (Stage) node.getScene().getWindow();
                 stage.setMaximized(false);
                 stage.close();
-                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/InviteUserEventView.fxml")));
+                Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/InviteUserEventView.fxml")));
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException e) {

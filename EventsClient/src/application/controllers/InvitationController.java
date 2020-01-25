@@ -57,7 +57,7 @@ public class InvitationController implements Initializable {
                 Stage stage = (Stage) node.getScene().getWindow();
                 stage.setMaximized(false);
                 stage.close();
-                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/AcceptInvitationView.fxml")));
+                Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/AcceptInvitationView.fxml")));
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException e) {
@@ -80,7 +80,7 @@ public class InvitationController implements Initializable {
                 Stage stage = (Stage) node.getScene().getWindow();
                 stage.setMaximized(false);
                 stage.close();
-                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../ui/EventDetailsView.fxml")));
+                Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("ui/EventDetailsView.fxml")));
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException e) {
@@ -121,7 +121,8 @@ public class InvitationController implements Initializable {
             if ("200".equalsIgnoreCase(invitationDataResponse.getStatusCode())) {
                 InvitationData invitationData = invitationDataResponse.getInvitations().get(0);
                 if (file != null) {
-                    saveTextToFile(Base64.getEncoder().encodeToString(invitationData.getInvitationFile().getFileData()), file);
+                    String steps="Access your account and on the Invitations screen you have the acceptance button. Press it and enter the following invitation key: ";
+                    saveTextToFile(steps+Base64.getEncoder().encodeToString(invitationData.getInvitationFile().getFileData()), file);
                 }
             }
         }

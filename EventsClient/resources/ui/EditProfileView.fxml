@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="427.0" style="-fx-background-color: #FFF;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.EditProfileController">
+    <children>
+        <Pane prefHeight="575.0" prefWidth="429.0" style="-fx-background-color: #0C39FF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <ImageView fitHeight="76.0" fitWidth="82.0" layoutX="58.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../logo.png" />
+                    </image>
+                </ImageView>
+                <Label alignment="CENTER" layoutX="140.0" layoutY="54.0" prefHeight="23.0" prefWidth="173.0" text="Events Management" textFill="WHITE">
+                    <font>
+                        <Font name="Segoe UI" size="18.0" />
+                    </font>
+                </Label>
+                <Label alignment="CENTER" layoutX="148.0" layoutY="77.0" prefHeight="23.0" prefWidth="114.0" text="Edit Profile Form" textFill="WHITE">
+                    <font>
+                        <Font name="Segoe UI" size="12.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="txtFirstname" layoutX="75.0" layoutY="159.0" prefHeight="32.0" prefWidth="278.0" promptText="firstname" />
+                <TextField fx:id="txtLastname" layoutX="75.0" layoutY="217.0" prefHeight="32.0" prefWidth="278.0" promptText="lastname" />
+                <TextField fx:id="txtEmail" layoutX="75.0" layoutY="276.0" prefHeight="32.0" prefWidth="278.0" promptText="email" />
+                <Button fx:id="btnEditProfile" layoutX="76.0" layoutY="449.0" mnemonicParsing="false" onMouseClicked="#handleEditProfileEventButtonAction" prefHeight="32.0" prefWidth="278.0" styleClass="button2" stylesheets="@../style.css" text="Save Edit" />
+                <PasswordField fx:id="txtPassword" layoutX="75.0" layoutY="337.0" prefHeight="32.0" prefWidth="278.0" promptText="new password" stylesheets="@../style.css" />
+                <PasswordField fx:id="txtConfirmPassword" layoutX="75.0" layoutY="395.0" prefHeight="32.0" prefWidth="278.0" promptText="confirm new password" stylesheets="@../style.css" />
+                <Button fx:id="btnBack" layoutX="75.0" layoutY="497.0" mnemonicParsing="false" onMouseClicked="#handleBackButtonAction" prefHeight="32.0" prefWidth="278.0" styleClass="button" stylesheets="@../style.css" text="Back" />
+                <Label fx:id="emailLblError" alignment="CENTER" layoutX="75.0" layoutY="253.0" prefHeight="23.0" prefWidth="114.0" textFill="WHITE">
+                    <font>
+                        <Font name="Segoe UI" size="12.0" />
+                    </font>
+                </Label>
+                <Label fx:id="passowrdLblError" alignment="CENTER" layoutX="75.0" layoutY="314.0" prefHeight="23.0" prefWidth="114.0" textFill="WHITE">
+                    <font>
+                        <Font name="Segoe UI" size="12.0" />
+                    </font>
+                </Label>
+                <Label fx:id="serverLblError" alignment="CENTER" layoutX="148.0" layoutY="108.0" prefHeight="23.0" prefWidth="114.0" textFill="WHITE">
+                    <font>
+                        <Font name="Segoe UI" size="12.0" />
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+    </children>
+</AnchorPane>
