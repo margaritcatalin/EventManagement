@@ -20,6 +20,7 @@ import com.unitbv.events.request.EditEventRequest;
 import com.unitbv.events.response.EventDataResponse;
 import com.unitbv.events.response.SimpleResponse;
 import com.unitbv.events.service.EventService;
+import com.unitbv.events.service.InvitationService;
 import com.unitbv.events.service.NotificationService;
 import com.unitbv.events.util.EntityDAOImplFactory;
 
@@ -31,6 +32,7 @@ public class DefaultEventService implements EventService {
 	private RoleDao roleDao;
 	private InvitationDao invitationDao;
 	private NotificationService notificationService;
+	private InvitationService invitationService;
 
 	public DefaultEventService() {
 		userDao = entityDAOImplFactory.createNewUserDao(PERSISTENCE_UNIT_NAME);
@@ -38,7 +40,7 @@ public class DefaultEventService implements EventService {
 		roleDao = entityDAOImplFactory.createNewRoleDao(PERSISTENCE_UNIT_NAME);
 		invitationDao = entityDAOImplFactory.createNewInvitationDao(PERSISTENCE_UNIT_NAME);
 		notificationService = new DefaultNotificationService();
-
+		invitationService = new DefaultInvitationService();
 	}
 
 	@Override
@@ -47,8 +49,7 @@ public class DefaultEventService implements EventService {
 		EventDataResponse response = new EventDataResponse();
 		List<Event> eventModels = eventDao.readAll();
 		List<EventData> events = new ArrayList<EventData>();
-		Role role = roleDao.findByRoleName("ADMIN");
-		if (userModel.getRoles().contains(role)) {
+		if (userModel.getRoles().get(0).getRoleName().equalsIgnoreCase("ADMIN")) {
 			eventModels.stream().forEach(event -> {
 				EventData eventData = new EventData();
 				eventData.setDate(event.getDate());
@@ -61,7 +62,7 @@ public class DefaultEventService implements EventService {
 				eventData.setOrganizer(organizer);
 				events.add(eventData);
 			});
-		} else {
+		} else if (userModel.getRoles().get(0).getRoleName().equalsIgnoreCase("ORGANIZER")) {
 			eventModels.stream().filter(ev -> userModel.getUserId() == ev.getUser().getUserId()).forEach(event -> {
 				EventData eventData = new EventData();
 				eventData.setDate(event.getDate());
@@ -74,6 +75,21 @@ public class DefaultEventService implements EventService {
 				eventData.setOrganizer(organizer);
 				events.add(eventData);
 			});
+		} else {
+			List<Event> eventModelList = new ArrayList<Event>();
+			invitationService.readAllByUserEmail(currentUserEmail).forEach(inv->eventModelList.add(inv.getEvent()));
+			eventModelList.stream().forEach(event -> {
+						EventData eventData = new EventData();
+						eventData.setDate(event.getDate());
+						eventData.setName(event.getName());
+						eventData.setLocation(event.getLocation());
+						eventData.setDescription(event.getDescription());
+						eventData.setNrSeats(event.getNrSeats());
+						eventData.setEventId(event.getEventId());
+						String organizer = event.getUser().getFirstName() + " " + event.getUser().getLastName();
+						eventData.setOrganizer(organizer);
+						events.add(eventData);
+					});
 		}
 		response.setEvents(events);
 
@@ -87,8 +103,7 @@ public class DefaultEventService implements EventService {
 		EventDataResponse response = new EventDataResponse();
 		List<Event> eventModels = eventDao.readAll();
 		List<EventData> events = new ArrayList<EventData>();
-		Role role = roleDao.findByRoleName("ADMIN");
-		if (userModel.getRoles().contains(role)) {
+		if (userModel.getRoles().get(0).getRoleName().equalsIgnoreCase("ADMIN")) {
 			eventModels.stream().forEach(event -> {
 				EventData eventData = new EventData();
 				eventData.setDate(event.getDate());
@@ -101,7 +116,7 @@ public class DefaultEventService implements EventService {
 				eventData.setOrganizer(organizer);
 				events.add(eventData);
 			});
-		} else {
+		} else if (userModel.getRoles().get(0).getRoleName().equalsIgnoreCase("ORGANIZER")) {
 			eventModels.stream().filter(ev -> userModel.getUserId() == ev.getUser().getUserId()).forEach(event -> {
 				EventData eventData = new EventData();
 				eventData.setDate(event.getDate());
@@ -114,6 +129,21 @@ public class DefaultEventService implements EventService {
 				eventData.setOrganizer(organizer);
 				events.add(eventData);
 			});
+		} else {
+			List<Event> eventModelList = new ArrayList<Event>();
+			invitationService.readAllByUserEmail(currentUserEmail).forEach(inv->eventModelList.add(inv.getEvent()));
+			eventModelList.stream().forEach(event -> {
+						EventData eventData = new EventData();
+						eventData.setDate(event.getDate());
+						eventData.setName(event.getName());
+						eventData.setLocation(event.getLocation());
+						eventData.setDescription(event.getDescription());
+						eventData.setNrSeats(event.getNrSeats());
+						eventData.setEventId(event.getEventId());
+						String organizer = event.getUser().getFirstName() + " " + event.getUser().getLastName();
+						eventData.setOrganizer(organizer);
+						events.add(eventData);
+					});
 		}
 		Date currentDate = new Date(System.currentTimeMillis());
 		response.setEvents(events.stream().filter(ev -> ev.getDate().before(currentDate)).collect(Collectors.toList()));
@@ -127,8 +157,7 @@ public class DefaultEventService implements EventService {
 		EventDataResponse response = new EventDataResponse();
 		List<Event> eventModels = eventDao.readAll();
 		List<EventData> events = new ArrayList<EventData>();
-		Role role = roleDao.findByRoleName("ADMIN");
-		if (userModel.getRoles().contains(role)) {
+		if (userModel.getRoles().get(0).getRoleName().equalsIgnoreCase("ADMIN")) {
 			eventModels.stream().forEach(event -> {
 				EventData eventData = new EventData();
 				eventData.setDate(event.getDate());
@@ -141,7 +170,7 @@ public class DefaultEventService implements EventService {
 				eventData.setOrganizer(organizer);
 				events.add(eventData);
 			});
-		} else {
+		} else if (userModel.getRoles().get(0).getRoleName().equalsIgnoreCase("ORGANIZER")) {
 			eventModels.stream().filter(ev -> userModel.getUserId() == ev.getUser().getUserId()).forEach(event -> {
 				EventData eventData = new EventData();
 				eventData.setDate(event.getDate());
@@ -154,6 +183,21 @@ public class DefaultEventService implements EventService {
 				eventData.setOrganizer(organizer);
 				events.add(eventData);
 			});
+		} else {
+			List<Event> eventModelList = new ArrayList<Event>();
+			invitationService.readAllByUserEmail(currentUserEmail).forEach(inv->eventModelList.add(inv.getEvent()));
+			eventModelList.stream().forEach(event -> {
+						EventData eventData = new EventData();
+						eventData.setDate(event.getDate());
+						eventData.setName(event.getName());
+						eventData.setLocation(event.getLocation());
+						eventData.setDescription(event.getDescription());
+						eventData.setNrSeats(event.getNrSeats());
+						eventData.setEventId(event.getEventId());
+						String organizer = event.getUser().getFirstName() + " " + event.getUser().getLastName();
+						eventData.setOrganizer(organizer);
+						events.add(eventData);
+					});
 		}
 		Date currentDate = new Date(System.currentTimeMillis());
 		response.setEvents(events.stream().filter(ev -> ev.getDate().after(currentDate)).collect(Collectors.toList()));
