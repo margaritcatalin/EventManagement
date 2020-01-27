@@ -5,8 +5,6 @@ import com.unitbv.events.request.AvailabilityRequest;
 import com.unitbv.events.request.EditProfileRequest;
 import com.unitbv.events.request.RegisterRequest;
 import com.unitbv.events.response.CustomerDataResponse;
-import com.unitbv.events.response.InvitationDataResponse;
-import com.unitbv.events.response.NotificationDataResponse;
 import com.unitbv.events.response.SimpleResponse;
 import com.unitbv.events.response.UserDataResponse;
 
@@ -25,10 +23,6 @@ public interface UserService {
 	boolean checkIfAccountExist(String userName);
 
 	boolean checkIfCredentialsIsCorrect(String userName, String password);
-
-	NotificationDataResponse getAllNotificationForUser(String currentUserEmail);
-
-	InvitationDataResponse getAllInvitationForUser(String currentUserEmail);
 
 	UserDataResponse getUserByEmail(String email);
 

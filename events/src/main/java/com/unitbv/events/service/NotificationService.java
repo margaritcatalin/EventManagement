@@ -3,6 +3,7 @@ package com.unitbv.events.service;
 import java.util.List;
 
 import com.unitbv.events.model.Notification;
+import com.unitbv.events.response.NotificationDataResponse;
 import com.unitbv.events.response.SimpleResponse;
 
 public interface NotificationService {
@@ -13,4 +14,7 @@ public interface NotificationService {
 	SimpleResponse deleteAllNotification(String userEmail);
 
 	List<Notification> readAllByUserEmail(String email);
+	
+	NotificationDataResponse getAllNotificationForUser(String currentUserEmail);
+
 }

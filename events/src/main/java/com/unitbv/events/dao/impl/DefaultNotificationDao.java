@@ -6,8 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import com.unitbv.events.dao.NotificationDao;
-import com.unitbv.events.model.Event;
-import com.unitbv.events.model.Invitation;
 import com.unitbv.events.model.Notification;
 import com.unitbv.events.model.User;
 import com.unitbv.events.util.ConnectionManager;

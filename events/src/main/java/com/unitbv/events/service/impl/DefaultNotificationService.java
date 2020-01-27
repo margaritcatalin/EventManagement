@@ -1,14 +1,16 @@
 package com.unitbv.events.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import com.mysql.cj.util.StringUtils;
 import com.unitbv.events.dao.NotificationDao;
 import com.unitbv.events.dao.UserDao;
+import com.unitbv.events.data.NotificationData;
 import com.unitbv.events.model.Notification;
 import com.unitbv.events.model.User;
+import com.unitbv.events.response.NotificationDataResponse;
 import com.unitbv.events.response.SimpleResponse;
 import com.unitbv.events.service.NotificationService;
 import com.unitbv.events.util.EntityDAOImplFactory;
@@ -62,7 +64,6 @@ public class DefaultNotificationService implements NotificationService {
 	@Override
 	public SimpleResponse deleteAllNotification(String userEmail) {
 		SimpleResponse simpleResponse = new SimpleResponse();
-		User user = userDao.findByEmail(userEmail);
 		while (readAllByUserEmail(userEmail).size() > 0) {
 			notificationDao.delete(readAllByUserEmail(userEmail).get(0));
 		}
@@ -76,4 +77,28 @@ public class DefaultNotificationService implements NotificationService {
 		return notificationDao.findByUser(user);
 	}
 
+	@Override
+	public NotificationDataResponse getAllNotificationForUser(String currentUserEmail) {
+		NotificationDataResponse notificationDataResponse = new NotificationDataResponse();
+		User userModel = userDao.findByEmail(currentUserEmail);
+		if (Objects.isNull(userModel)) {
+			notificationDataResponse.setStatusCode("404");
+		} else {
+			notificationDataResponse.setStatusCode("200");
+			List<NotificationData> notifications = new ArrayList<>();
+			try {
+					readAllByUserEmail(currentUserEmail).forEach(not -> {
+					NotificationData notificationData = new NotificationData();
+					notificationData.setDescription(not.getDescription());
+					notificationData.setNotificationId(String.valueOf(not.getNotificationId()));
+					notifications.add(notificationData);
+				});
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			notificationDataResponse.setNotifications(notifications);
+		}
+		return notificationDataResponse;
+
+	}
 }

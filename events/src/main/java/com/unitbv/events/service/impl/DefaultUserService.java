@@ -3,8 +3,6 @@ package com.unitbv.events.service.impl;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -26,12 +24,8 @@ import com.unitbv.events.dao.RoleDao;
 import com.unitbv.events.dao.UserDao;
 import com.unitbv.events.data.CustomerData;
 import com.unitbv.events.data.EventData;
-import com.unitbv.events.data.InvitationData;
-import com.unitbv.events.data.InvitationFileData;
-import com.unitbv.events.data.NotificationData;
 import com.unitbv.events.data.RoleData;
 import com.unitbv.events.data.UserData;
-import com.unitbv.events.model.Notification;
 import com.unitbv.events.model.Role;
 import com.unitbv.events.model.User;
 import com.unitbv.events.request.AcceptInvitationRequest;
@@ -39,11 +33,8 @@ import com.unitbv.events.request.AvailabilityRequest;
 import com.unitbv.events.request.EditProfileRequest;
 import com.unitbv.events.request.RegisterRequest;
 import com.unitbv.events.response.CustomerDataResponse;
-import com.unitbv.events.response.InvitationDataResponse;
-import com.unitbv.events.response.NotificationDataResponse;
 import com.unitbv.events.response.SimpleResponse;
 import com.unitbv.events.response.UserDataResponse;
-import com.unitbv.events.service.InvitationService;
 import com.unitbv.events.service.NotificationService;
 import com.unitbv.events.service.UserService;
 import com.unitbv.events.util.EntityDAOImplFactory;
@@ -55,13 +46,11 @@ public class DefaultUserService implements UserService {
 	private UserDao userDao;
 	private RoleDao roleDao;
 	private NotificationService notificationService;
-	private InvitationService invitationService;
 
 	public DefaultUserService() {
 		userDao = entityDAOImplFactory.createNewUserDao(PERSISTENCE_UNIT_NAME);
 		roleDao = entityDAOImplFactory.createNewRoleDao(PERSISTENCE_UNIT_NAME);
 		notificationService = new DefaultNotificationService();
-		invitationService = new DefaultInvitationService();
 
 	}
 
@@ -176,63 +165,6 @@ public class DefaultUserService implements UserService {
 		userModel.setIsAvailable(request.getAvailable());
 		notificationService.createNotification(userModel.getEmail(), "Your availability was changed.");
 		return Objects.nonNull(userDao.createOrUpdate(userModel));
-	}
-
-	@Override
-	public NotificationDataResponse getAllNotificationForUser(String currentUserEmail) {
-		NotificationDataResponse notificationDataResponse = new NotificationDataResponse();
-		User userModel = userDao.findByEmail(currentUserEmail);
-		if (Objects.isNull(userModel)) {
-			notificationDataResponse.setStatusCode("404");
-		} else {
-			notificationDataResponse.setStatusCode("200");
-			List<NotificationData> notifications = new ArrayList<>();
-			try {
-				notificationService.readAllByUserEmail(currentUserEmail).forEach(not -> {
-					NotificationData notificationData = new NotificationData();
-					notificationData.setDescription(not.getDescription());
-					notificationData.setNotificationId(String.valueOf(not.getNotificationId()));
-					notifications.add(notificationData);
-				});
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			notificationDataResponse.setNotifications(notifications);
-		}
-		return notificationDataResponse;
-
-	}
-
-	@Override
-	public InvitationDataResponse getAllInvitationForUser(String currentUserEmail) {
-		InvitationDataResponse invitationDataResponse = new InvitationDataResponse();
-		User userModel = userDao.findByEmail(currentUserEmail);
-		if (Objects.isNull(userModel)) {
-			invitationDataResponse.setStatusCode("404");
-		} else {
-			invitationDataResponse.setStatusCode("200");
-			List<InvitationData> invitations = new ArrayList<>();
-			invitationService.readAllByUserEmail(currentUserEmail).stream().forEach(inv -> {
-				InvitationData invitationData = new InvitationData();
-				invitationData.setCreationDate(inv.getCreationDate());
-				invitationData.setDescription(inv.getDescription());
-				invitationData.setEventDate(inv.getEvent().getDate());
-				invitationData.setEventName(inv.getEvent().getName());
-				if (Objects.isNull(inv.getIsAccepted())) {
-					invitationData.setIsAccepted("Wait");
-				} else {
-					invitationData.setIsAccepted(inv.getIsAccepted() ? "Yes" : "No");
-				}
-				invitationData.setReference("Ref: " + inv.getInvitationId());
-				InvitationFileData invitationFile = new InvitationFileData();
-				invitationFile.setExtension(inv.getInvitationfile().getExtension());
-				invitationFile.setFileData(inv.getInvitationfile().getFileData());
-				invitationData.setInvitationFile(invitationFile);
-				invitations.add(invitationData);
-			});
-			invitationDataResponse.setInvitations(invitations);
-		}
-		return invitationDataResponse;
 	}
 
 	@Override

@@ -61,9 +61,7 @@ public class ServerUtilities implements Runnable {
 					SimpleResponse response = new SimpleResponse();
 					response.setStatusCode("404");
 					response.setMessage("Command not Found");
-					bufferedOutputWriter.write(gson.toJson(response));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(response));
 				}
 				if ("login".equalsIgnoreCase(inputCommand)) {
 					LoginRequst request = gson.fromJson(receivedData, LoginRequst.class);
@@ -78,9 +76,7 @@ public class ServerUtilities implements Runnable {
 						response.setStatusCode("200");
 						response.setMessage("Login successful!");
 					}
-					bufferedOutputWriter.write(gson.toJson(response));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(response));
 				} else if ("register".equalsIgnoreCase(inputCommand)) {
 					SimpleResponse response = new SimpleResponse();
 					RegisterRequest registerRequest = gson.fromJson(receivedData, RegisterRequest.class);
@@ -94,14 +90,11 @@ public class ServerUtilities implements Runnable {
 						response.setStatusCode("500");
 						response.setMessage("Internal Server Errror!");
 					}
-					bufferedOutputWriter.write(gson.toJson(response));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(response));
 				} else if ("getUser".equalsIgnoreCase(inputCommand)) {
 					GetUserRequest getUserRequest = gson.fromJson(receivedData, GetUserRequest.class);
-					bufferedOutputWriter.write(gson.toJson(userService.getUserByEmail(getUserRequest.getEmail())));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter,
+							gson.toJson(userService.getUserByEmail(getUserRequest.getEmail())));
 				} else if ("editProfile".equalsIgnoreCase(inputCommand)) {
 					SimpleResponse response = new SimpleResponse();
 					EditProfileRequest updateUserRequest = gson.fromJson(receivedData, EditProfileRequest.class);
@@ -116,9 +109,7 @@ public class ServerUtilities implements Runnable {
 						response.setStatusCode("500");
 						response.setMessage("Internal Server Errror!");
 					}
-					bufferedOutputWriter.write(gson.toJson(response));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(response));
 				} else if ("setUserAvailability".equalsIgnoreCase(inputCommand)) {
 					SimpleResponse response = new SimpleResponse();
 					AvailabilityRequest availabilityRequest = gson.fromJson(receivedData, AvailabilityRequest.class);
@@ -130,75 +121,48 @@ public class ServerUtilities implements Runnable {
 						response.setStatusCode("500");
 						response.setMessage("Internal Server Errror!");
 					}
-					bufferedOutputWriter.write(gson.toJson(response));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(response));
 				} else if ("acceptInvitation".equalsIgnoreCase(inputCommand)) {
 					AcceptInvitationRequest acceptInvitationRequest = gson.fromJson(receivedData,
 							AcceptInvitationRequest.class);
-					bufferedOutputWriter.write(gson.toJson(eventService.acceptInvitation(acceptInvitationRequest)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter,
+							gson.toJson(invitationService.acceptInvitation(acceptInvitationRequest)));
 				} else if ("enterForgotCode".equalsIgnoreCase(inputCommand)) {
 					AcceptInvitationRequest acceptInvitationRequest = gson.fromJson(receivedData,
 							AcceptInvitationRequest.class);
-					bufferedOutputWriter
-							.write(gson.toJson(userService.enterForgotPasswordCode(acceptInvitationRequest)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter,
+							gson.toJson(userService.enterForgotPasswordCode(acceptInvitationRequest)));
 				} else if ("changePassword".equalsIgnoreCase(inputCommand)) {
 					AcceptInvitationRequest acceptInvitationRequest = gson.fromJson(receivedData,
 							AcceptInvitationRequest.class);
-					bufferedOutputWriter.write(gson.toJson(userService.changePassword(acceptInvitationRequest)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter,
+							gson.toJson(userService.changePassword(acceptInvitationRequest)));
 				} else if ("sendForgotCode".equalsIgnoreCase(inputCommand)) {
 					userService.forgotPassword(receivedData);
 					bufferedOutputWriter.newLine();
 					bufferedOutputWriter.flush();
 				} else if ("getAllEvents".equalsIgnoreCase(inputCommand)) {
-					String currentUserEmail = receivedData;
-					bufferedOutputWriter.write(gson.toJson(eventService.getAllEvents(currentUserEmail)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(eventService.getAllEvents(receivedData)));
 				} else if ("getCompletedEventsForCurrentUser".equalsIgnoreCase(inputCommand)) {
-					String currentUserEmail = receivedData;
-					bufferedOutputWriter
-							.write(gson.toJson(eventService.getCompletedEventsForCurrentUser(currentUserEmail)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter,
+							gson.toJson(eventService.getCompletedEventsForCurrentUser(receivedData)));
 				} else if ("getNextEventsForCurrentUser".equalsIgnoreCase(inputCommand)) {
-					String currentUserEmail = receivedData;
-					bufferedOutputWriter.write(gson.toJson(eventService.getNextEventsForCurrentUser(currentUserEmail)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter,
+							gson.toJson(eventService.getNextEventsForCurrentUser(receivedData)));
 				} else if ("getNotificationForCurrentUser".equalsIgnoreCase(inputCommand)) {
-					String currentUserEmail = receivedData;
-					bufferedOutputWriter.write(gson.toJson(userService.getAllNotificationForUser(currentUserEmail)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter,
+							gson.toJson(notificationService.getAllNotificationForUser(receivedData)));
 				} else if ("getInvitationsForCurrentUser".equalsIgnoreCase(inputCommand)) {
-					String currentUserEmail = receivedData;
-					bufferedOutputWriter.write(gson.toJson(userService.getAllInvitationForUser(currentUserEmail)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(invitationService.getAllInvitationForUser(receivedData)));
 				} else if ("getInvitationByCode".equalsIgnoreCase(inputCommand)) {
-					String invitationCode = receivedData;
-					bufferedOutputWriter.write(gson.toJson(invitationService.getInvitationByCode(invitationCode)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter,
+							gson.toJson(invitationService.getInvitationByCode(receivedData)));
 				} else if ("getAllUsers".equalsIgnoreCase(inputCommand)) {
-					bufferedOutputWriter.write(gson.toJson(userService.getAllUsers()));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(userService.getAllUsers()));
 				} else if ("getAllCustomers".equalsIgnoreCase(inputCommand)) {
-					bufferedOutputWriter.write(gson.toJson(userService.getAllCustomers()));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(userService.getAllCustomers()));
 				} else if ("getAllOrganizers".equalsIgnoreCase(inputCommand)) {
-					bufferedOutputWriter.write(gson.toJson(userService.getAllOrganizers()));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(userService.getAllOrganizers()));
 				} else if ("createEvent".equalsIgnoreCase(inputCommand)) {
 					SimpleResponse response = new SimpleResponse();
 					CreateEventRequest createEventRequest = gson.fromJson(receivedData, CreateEventRequest.class);
@@ -209,24 +173,15 @@ public class ServerUtilities implements Runnable {
 						response.setStatusCode("500");
 						response.setMessage("Internal Server Errror!");
 					}
-					bufferedOutputWriter.write(gson.toJson(response));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(response));
 				} else if ("deleteEvent".equalsIgnoreCase(inputCommand)) {
-					String eventCode = receivedData;
-					bufferedOutputWriter.write(gson.toJson(eventService.deleteEvent(eventCode)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(eventService.deleteEvent(receivedData)));
 				} else if ("deleteAllNotification".equalsIgnoreCase(inputCommand)) {
-					String userCode = receivedData;
-					bufferedOutputWriter.write(gson.toJson(notificationService.deleteAllNotification(userCode)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter,
+							gson.toJson(notificationService.deleteAllNotification(receivedData)));
 				} else if ("deleteNotification".equalsIgnoreCase(inputCommand)) {
-					String notificationCode = receivedData;
-					bufferedOutputWriter.write(gson.toJson(notificationService.deleteNotification(notificationCode)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter,
+							gson.toJson(notificationService.deleteNotification(receivedData)));
 				} else if ("editEvent".equalsIgnoreCase(inputCommand)) {
 					SimpleResponse response = new SimpleResponse();
 					EditEventRequest editEventRequest = gson.fromJson(receivedData, EditEventRequest.class);
@@ -237,33 +192,23 @@ public class ServerUtilities implements Runnable {
 						response.setStatusCode("500");
 						response.setMessage("Internal Server Errror!");
 					}
-					bufferedOutputWriter.write(gson.toJson(response));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(response));
 				} else if ("getEventById".equalsIgnoreCase(inputCommand)) {
-					String eventId = receivedData;
-					bufferedOutputWriter.write(gson.toJson(eventService.getEventById(eventId)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(eventService.getEventById(receivedData)));
 				} else if ("getEventByInvitationId".equalsIgnoreCase(inputCommand)) {
-					bufferedOutputWriter.write(gson.toJson(eventService.getEventByInvitationId(receivedData)));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(eventService.getEventByInvitationId(receivedData)));
 				} else if ("sendInvitationToUser".equalsIgnoreCase(inputCommand)) {
 					SimpleResponse response = new SimpleResponse();
 					SendInvitationRequest sendInvitationRequest = gson.fromJson(receivedData,
 							SendInvitationRequest.class);
-					if (eventService.sendInvitation(sendInvitationRequest)) {
+					if (invitationService.sendInvitation(sendInvitationRequest)) {
 						response.setStatusCode("200");
 						response.setMessage("Successful!");
 					} else {
 						response.setStatusCode("500");
 						response.setMessage("Internal Server Errror!");
 					}
-					bufferedOutputWriter.write(gson.toJson(response));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
-
+					sendResponse(bufferedOutputWriter, gson.toJson(response));
 				} else if ("deactivateUser".equalsIgnoreCase(inputCommand)) {
 					SimpleResponse response = new SimpleResponse();
 					if (userService.checkIfAccountExist(receivedData) && userService.deactivateUser(receivedData)) {
@@ -273,16 +218,12 @@ public class ServerUtilities implements Runnable {
 						response.setStatusCode("500");
 						response.setMessage("Internal Server Errror!");
 					}
-					bufferedOutputWriter.write(gson.toJson(response));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(response));
 				} else {
 					SimpleResponse response = new SimpleResponse();
 					response.setStatusCode("404");
 					response.setMessage("Command not Found");
-					bufferedOutputWriter.write(gson.toJson(response));
-					bufferedOutputWriter.newLine();
-					bufferedOutputWriter.flush();
+					sendResponse(bufferedOutputWriter, gson.toJson(response));
 				}
 
 			} catch (SocketTimeoutException ste) {
@@ -301,4 +242,9 @@ public class ServerUtilities implements Runnable {
 		}
 	}
 
+	private void sendResponse(final BufferedWriter bufferedOutputWriter, final String response) throws IOException {
+		bufferedOutputWriter.write(response);
+		bufferedOutputWriter.newLine();
+		bufferedOutputWriter.flush();
+	}
 }
